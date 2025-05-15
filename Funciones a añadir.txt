@@ -1,0 +1,9 @@
+1: Sroclling de pantalla 
+2: Funciones de salto, correr, caminar 
+3: Sprites de  salto, correr y caminar
+4: Lo mismo de arriba, pero para enemigos
+5: Poderes ocultos (Hongo, Planta)
+6: Inmunidad de la estrella 
+7: Lista de stats (ni se como se puede hacer eso jasjasjas)
+8: Coins y funcion para aumentar vida
+9: sonido (pq si, no se)
