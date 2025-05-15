@@ -1,2 +1,2 @@
-# finalproyect
-final proyect on mariobros
+# Proyecto Mario Bros
+
