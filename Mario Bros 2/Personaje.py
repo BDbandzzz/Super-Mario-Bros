@@ -35,10 +35,9 @@ class Personaje(pygame.sprite.Sprite):
 
 
 
-
-
 class Mario(Personaje):
     def __init__(self, id, nombre, posicionX, posicionY, estado="Vivo", vida=3):
         super().__init__(id, nombre, posicionX, posicionY, estado, vida)
+        
      
      

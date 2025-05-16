@@ -32,13 +32,17 @@ while not Juego:
       
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
-        personaje.mover(dx = -5)
+        personaje.mover(dx= -4)
+    if keys[pygame.K_LEFT] and keys[pygame.K_x]:
+        valor = + -1
+        velocidad = max(-10, min(valor, -5))
+        personaje.mover(dx = -5 + velocidad)  
     if keys[pygame.K_RIGHT]:
-        personaje.mover(dx = 5)
+        personaje.mover(dx = 4)
     if keys[pygame.K_UP]:
         pass # Aqui va la funcion de salto, o no se con que tecla se puede poner
     if keys[pygame.K_DOWN]:
-        personaje.mover(dy = 5)      
+        personaje.mover(dy = 4)      
 
     all_lista_sprites.update()
 
