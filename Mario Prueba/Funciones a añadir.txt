@@ -7,3 +7,21 @@
 7: Lista de stats (ni se como se puede hacer eso jasjasjas)
 8: Coins y funcion para aumentar vida
 9: sonido (pq si, no se)
+
+
+
+
+Funciones ya implementadas:
+1: Movimiento de personaje // Enemigo
+2: Correr Personaje (Puede mejorar)
+
+# Viernes 
+Implementar animaciones de enemigos y personaje
+
+
+# Sabado 
+Implementar salto, Sprites de hongos rojos, verdes y coins
+
+
+# Domingo 
+Break 

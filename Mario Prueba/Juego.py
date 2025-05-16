@@ -16,7 +16,7 @@ background = pygame.image.load(BACKGROUND_IMAGE).convert_alpha()
 
 # Crear personaje, ubicarlo en la posiciones 
 personaje = Personaje(id=1, nombre="Jugador", posicionX=0, posicionY=580)
-Goomba = Enemigo(nombre="Goomba", posicionX=100, posicionY=580, vida=1, id=2)
+Goomba = Enemigo(nombre="Goomba", posicionX=ANCHURA_PANTALLA, posicionY=580, vida=1, id=2)
 personaje_volteado = pygame.transform.flip(personaje.image,True,False)
 imagen_base = personaje.image
 direccion = False
@@ -29,7 +29,13 @@ all_lista_sprites.add(Goomba)
 
 # Crear enemigo, ubicarlo en la posiciones
 
-
+def mover_enemigo(Enemigo):
+    
+    delta_x = 3 * Enemigo.direccion
+    Enemigo.mover(dx=delta_x)
+    if Enemigo.posicionX < -10:
+        all_lista_sprites.remove(Goomba)
+        
 
 
 # Variable boleana para el bucle principal 
@@ -80,7 +86,7 @@ while not Juego:
         personaje.mover(dy = 4)      
 
     all_lista_sprites.update()
-
+    mover_enemigo(Goomba)
     # Dibujar en la pantalla
     PANTALLA.blit(background, (0, 0))  # Dibujar el fondo
     all_lista_sprites.draw(PANTALLA)

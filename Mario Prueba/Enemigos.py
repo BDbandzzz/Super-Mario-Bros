@@ -9,6 +9,7 @@ class Enemigo(pygame.sprite.Sprite):
         self.posicionY = posicionY
         self.vida = vida
         self.id = id
+        self.direccion = -1
 
         self.image = pygame.image.load(ENEMIGO_IMAGE)
         self.image = pygame.transform.scale(self.image, (self.image.get_width() * 3, self.image.get_height() * 3))
