@@ -4,17 +4,16 @@ from Constantes import *
 
 
 class Personaje(pygame.sprite.Sprite):
-    def __init__(self, id, nombre, posicionX, posicionY, estado="Vivo", vida=3):
+    def __init__(self, id, nombre, posicionX, posicionY, vida=3):
         super().__init__()
         self.id = id
         self.nombre = nombre
         self.posicionX = posicionX
         self.posicionY = posicionY
-        self.estado = estado
         self.vida = vida
-        
+
         #Aqui se carga la imagen principal //"Puede cambiarse por una funcion que lo haga con
-         # los sprites con los que se va a trabajar despues"
+        # los sprites con los que se va a trabajar despues"
         
         self.image = pygame.image.load(PLAYER_IMAGE).convert_alpha()
         # Escalar la imagen del personaje
@@ -24,10 +23,6 @@ class Personaje(pygame.sprite.Sprite):
         self.rect.x = self.posicionX
         self.rect.y = self.posicionY
 
-
-        def cargar_sprites():
-            pass   
-    
     #Se añade una funcion para mover el personaje y se la asigna un limite
     # maximo para no sobrepasar los limites del suelo y la pantalla 
     
@@ -36,15 +31,12 @@ class Personaje(pygame.sprite.Sprite):
         self.rect.y += dy
         self.rect.x = max(0, min(self.rect.x,  ANCHURA_PANTALLA- self.rect.width))
         self.rect.y = max(0, min(self.rect.y, (ALTURA_PANTALLA-82) - self.rect.height))
-    
+
+
 
 class Mario(Personaje):
     def __init__(self, id, nombre, posicionX, posicionY, estado="Vivo", vida=3):
         super().__init__(id, nombre, posicionX, posicionY, estado, vida)
-
+        
      
-    def correr():
-        pass 
-    
-    def saltar():
-        pass
+     

@@ -1,5 +1,5 @@
 1: Sroclling de pantalla 
-2: Funciones de salto, correr, caminar  
+2: Funciones de salto, correr, caminar 
 3: Sprites de  salto, correr y caminar
 4: Lo mismo de arriba, pero para enemigos
 5: Poderes ocultos (Hongo, Planta)
