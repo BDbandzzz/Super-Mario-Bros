@@ -1,7 +1,7 @@
 import pygame
-from Personaje import cargar_imagenes
+from Personaje import Personaje
 
-class Enemigo(pygame.sprite.Sprite):
+class Enemigo(personaje):
     def __init__(self, nombre, posicionX, posicionY,vida):
         
         self.nombre = nombre

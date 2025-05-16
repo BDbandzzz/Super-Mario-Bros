@@ -1,7 +1,7 @@
 import pygame
 
 # Clase poderes
-class Powers(pygame.sprite.Sprite):
+class Poderes(pygame.sprite.Sprite):
     def __init__(self,nombre,posicionX,posicionY):
         
         self.nombre = nombre

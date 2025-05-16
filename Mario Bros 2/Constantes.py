@@ -1,10 +1,11 @@
 import os
+
 # Archivo de constantes, aqui se añaden todas las variables necesarias
 # para no sobrecargar el codigo principal.
 
 
 #Direccion de la carpeta
-ASSETS_PATH = "assets"
+ASSETS_PATH = "Assets"
 BLACK = (0, 0, 0)
 
 # Configuración de la pantalla

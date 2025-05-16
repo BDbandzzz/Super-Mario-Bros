@@ -30,5 +30,15 @@ class Personaje(pygame.sprite.Sprite):
     def mover(self, dx=0, dy=0):
         self.rect.x += dx
         self.rect.y += dy
-        self.rect.x = max(0, min(self.rect.x, ALTURA_PANTALLA - self.rect.width))
-        self.rect.y = max(0, min(self.rect.y, (ANCHURA_PANTALLA-82) - self.rect.height))
+        self.rect.x = max(0, min(self.rect.x,  ANCHURA_PANTALLA- self.rect.width))
+        self.rect.y = max(0, min(self.rect.y, (ALTURA_PANTALLA-82) - self.rect.height))
+
+
+
+
+
+class Mario(Personaje):
+    def __init__(self, id, nombre, posicionX, posicionY, estado="Vivo", vida=3):
+        super().__init__(id, nombre, posicionX, posicionY, estado, vida)
+     
+     
