@@ -35,7 +35,11 @@ def mover_enemigo(Enemigo):
     Enemigo.mover(dx=delta_x)
     if Enemigo.posicionX < -10:
         all_lista_sprites.remove(Goomba)
-        
+
+
+
+
+
 
 
 # Variable boleana para el bucle principal 
@@ -43,12 +47,18 @@ Juego = False
 score = 0
 
 
+
+
 # Bucle abnegado xddddd, a son de que 
 while not Juego:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             Juego = True
-      
+        if event.type == pygame.KEYDOWN:
+             if event.key == pygame.K_UP and not personaje.esta_saltando :
+              personaje.saltar(velocidad_salto=-12)
+              personaje.esta_saltando = True
+            
     keys = pygame.key.get_pressed()
     
     if keys[pygame.K_LEFT]:
@@ -79,11 +89,9 @@ while not Juego:
             direccion = False  
             personaje.image = imagen_base
         personaje.mover(dx=4)   
-           
-    if keys[pygame.K_UP]:
-        pass # Aqui va la funcion de salto, o no se con que tecla se puede poner
+        
     if keys[pygame.K_DOWN]:
-        personaje.mover(dy = 4)      
+        personaje.mover(dy = 0.5)      
 
     all_lista_sprites.update()
     mover_enemigo(Goomba)

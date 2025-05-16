@@ -11,6 +11,9 @@ class Personaje(pygame.sprite.Sprite):
         self.posicionX = posicionX
         self.posicionY = posicionY
         self.vida = vida
+        self.esta_saltando = bool
+        self.velocidad_salto = 0
+        self.gravedad = 0
 
         #Aqui se carga la imagen principal //"Puede cambiarse por una funcion que lo haga con
         # los sprites con los que se va a trabajar despues"
@@ -31,6 +34,17 @@ class Personaje(pygame.sprite.Sprite):
         self.rect.y += dy
         self.rect.x = max(0, min(self.rect.x,  ANCHURA_PANTALLA- self.rect.width))
         self.rect.y = max(0, min(self.rect.y, (ALTURA_PANTALLA-82) - self.rect.height))
+    
+    def saltar(self,velocidad_salto= 0):
+        self.velocidad_salto = velocidad_salto
+        self.esta_saltando = True
+
+
+    def update(self,gravedad = 0):  
+        self.gravedad = 0.5 
+        self.velocidad_salto += self.gravedad 
+        self.mover(dy = self.velocidad_salto)
+        self.esta_saltando = False
 
 
 
