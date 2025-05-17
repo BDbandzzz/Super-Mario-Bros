@@ -17,9 +17,10 @@ class Personaje(pygame.sprite.Sprite):
          # los sprites con los que se va a trabajar despues"
         
         self.image = pygame.image.load(PLAYER_IMAGE).convert_alpha()
-        # Escalar la imagen del personaje
         self.image = pygame.transform.scale(self.image, (self.image.get_width() * 3, self.image.get_height() * 3))
         self.image.set_colorkey(BLACK)
+        self.original = self.image
+        self.inverso = pygame.transform.flip(self.image,True,False)
         self.rect = self.image.get_rect()
         self.rect.x = self.posicionX
         self.rect.y = self.posicionY
@@ -46,25 +47,26 @@ class Mario(Personaje):
         self.altura_salto = 0
         self.gravedad = 0.5
         self.velocidad = 0
-        self.derecha = bool
+        self.direccion = bool
         
     def correr(self, derecha): 
-        if derecha:
-            velocidad = 8
-            self.mover(dx=velocidad)
-        else:
-            velocidad = -8
+        self.direccion = derecha
+        velocidad = 4 if self.direccion == True  else -8
         self.mover(dx=velocidad)
-    
-    def direccion():
-        pass
+        
+    def voltear_personaje(self):
+        if self.direccion:
+            self.image = self.original
+        else:
+            self.image = self.inverso     
 
     def saltar(self, velocidad_inicial=-12):
         if not self.esta_saltando:
             self.esta_saltando = True
             self.altura_salto = velocidad_inicial
-      
-    def bajar(self,gravedad = 0.5):
+            
+    def bajar(self):
+        if self.esta_saltando:
             self.altura_salto += self.gravedad
             self.mover(dy=self.altura_salto)
             limite_piso = (ALTURA_PANTALLA-82) - self.rect.height
@@ -72,3 +74,7 @@ class Mario(Personaje):
                 self.rect.y = limite_piso
                 self.esta_saltando = False
                 self.altura_salto = 0
+      
+    def update(self):
+        self.bajar()
+        self.voltear_personaje()

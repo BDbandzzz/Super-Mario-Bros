@@ -34,17 +34,23 @@ while not Juego:
             Juego = True
       
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT]:
-        personaje.mover(dx= -4)
     if keys[pygame.K_LEFT] and keys[pygame.K_x]:
         personaje.correr(derecha=False)
+        
+    if keys[pygame.K_LEFT]:
+        personaje.mover(dx= -4)
+        personaje.direccion = False
+    
     if keys[pygame.K_RIGHT] and keys[pygame.K_x]: 
         personaje.correr(derecha=True)
+        
     if keys[pygame.K_RIGHT]:
         personaje.mover(dx = 4)
+        personaje.direccion = True
+        
     if keys[pygame.K_c]:
         personaje.saltar()
-        personaje.esta_saltando = True
+        
     if keys[pygame.K_DOWN]:
         personaje.mover(dy = 4)      
     all_lista_sprites.update()
