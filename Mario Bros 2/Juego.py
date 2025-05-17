@@ -1,7 +1,7 @@
 import pygame
 import os
 from Constantes import *
-from Personaje import Personaje
+from Personaje import Mario
 
 # Inicialización de Pygame
 pygame.init()
@@ -15,7 +15,7 @@ background = pygame.image.load(BACKGROUND_IMAGE).convert_alpha()
 
 
 # Crear personaje, ubicarlo en la posiciones 
-personaje = Personaje(id=1, nombre="Jugador", posicionX=0, posicionY=580)
+personaje = Mario(id=1, nombre="Jugador", posicionX=0, posicionY=580)
 all_lista_sprites = pygame.sprite.Group()
 all_lista_sprites.add(personaje)
 
@@ -25,6 +25,9 @@ score = 0
 
 
 # Bucle abnegado xddddd, a son de que 
+
+
+
 while not Juego:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -34,17 +37,16 @@ while not Juego:
     if keys[pygame.K_LEFT]:
         personaje.mover(dx= -4)
     if keys[pygame.K_LEFT] and keys[pygame.K_x]:
-        
-        valor = + -1
-        velocidad = max(-10, min(valor, -5))
-        personaje.mover(dx = -5 + velocidad)  
+        personaje.correr(derecha=False)
+    if keys[pygame.K_RIGHT] and keys[pygame.K_x]: 
+        personaje.correr(derecha=True)
     if keys[pygame.K_RIGHT]:
         personaje.mover(dx = 4)
-    if keys[pygame.K_UP]:
-        pass # Aqui va la funcion de salto, o no se con que tecla se puede poner
+    if keys[pygame.K_c]:
+        personaje.saltar()
+        personaje.esta_saltando = True
     if keys[pygame.K_DOWN]:
         personaje.mover(dy = 4)      
-
     all_lista_sprites.update()
 
     # Dibujar en la pantalla

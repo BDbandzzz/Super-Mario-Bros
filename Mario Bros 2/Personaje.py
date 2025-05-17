@@ -41,10 +41,34 @@ class Personaje(pygame.sprite.Sprite):
 class Mario(Personaje):
     def __init__(self, id, nombre, posicionX, posicionY, estado="Vivo", vida=3):
         super().__init__(id, nombre, posicionX, posicionY, estado, vida)
-
-     
-    def correr():
-        pass 
+        
+        self.esta_saltando = False
+        self.altura_salto = 0
+        self.gravedad = 0.5
+        self.velocidad = 0
+        self.derecha = bool
+        
+    def correr(self, derecha): 
+        if derecha:
+            velocidad = 8
+            self.mover(dx=velocidad)
+        else:
+            velocidad = -8
+        self.mover(dx=velocidad)
     
-    def saltar():
+    def direccion():
         pass
+
+    def saltar(self, velocidad_inicial=-12):
+        if not self.esta_saltando:
+            self.esta_saltando = True
+            self.altura_salto = velocidad_inicial
+      
+    def bajar(self,gravedad = 0.5):
+            self.altura_salto += self.gravedad
+            self.mover(dy=self.altura_salto)
+            limite_piso = (ALTURA_PANTALLA-82) - self.rect.height
+            if self.rect.y >= limite_piso:
+                self.rect.y = limite_piso
+                self.esta_saltando = False
+                self.altura_salto = 0
