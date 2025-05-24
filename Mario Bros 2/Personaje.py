@@ -6,33 +6,18 @@ from SoundPlayer import SoundEfects
 
 
 class Personaje(pygame.sprite.Sprite):
-    def __init__(self,nombre, posicionX, posicionY, estado="Vivo", vida=3):
+    def __init__(self,nombre, posicionX, posicionY, estado="vivo", vida=3,coin=0,contador= 0):
         super().__init__()
+        
         self.nombre = nombre
         self.posicionX = posicionX
         self.posicionY = posicionY
         self.estado = estado
         self.vida = vida
-   
-        
-        #Aqui se carga la imagen principal //"Puede cambiarse por una funcion que lo haga con
-        # los sprites con los que se va a trabajar despues"  
-        self.base = cargar_sprites(1,PLAYER_IMAGE,False,escala=3)
-        self.caminando = cargar_sprites(3,RUNNING_PATH,True,escala=3)
-        self.caminando_inverso = voltear_sprites(self.caminando)
-        
-        
-        self.image = self.base[0]
-        self.original = self.image 
-        self.inverso = pygame.transform.flip(self.base[0],True,False)
+        self.coin = coin
+        self.contador = contador 
 
-        self.jump = cargar_sprites(1,JUMP_PATH,True,3)
-        self.salto_inverso = pygame.transform.flip(self.jump[0],True,False)
-        
-        self.rect = self.image.get_rect()
-        self.rect.x = self.posicionX
-        self.rect.y = self.posicionY
-    
+     
     #Se añade una funcion para mover el personaje y se la asigna un limite
     # maximo para no sobrepasar los limites del suelo y la pantalla 
     
@@ -48,23 +33,57 @@ class Mario(Personaje):
         super().__init__(nombre, posicionX, posicionY, estado, vida)
         
         self.esta_saltando = False
+        self.direccion = True  # True = derecha, False = izquierda
+        self.running = False # Evalua so esa corriendo o caminando
+        self.walking = False
+        self.esta_quieto = True  # Controla y evalua si el personaje esta moviendose o no
+        self.agachado = False
+        
+        self.sprites_mario = { "pequeño": { "saltar": cargar_sprites(1,JUMP_PATH,False,3),
+                                            "caminar": cargar_sprites(3,RUNNING_PATH,False,escala=3),
+                                            "Base": cargar_sprites(1,PLAYER_IMAGE,False,escala=3),
+                                            "Reverso_caminar": voltear_sprites(cargar_sprites(3,RUNNING_PATH,False,escala=3))
+                                            },
+                               "grande": {  "saltar": cargar_sprites(1,JUMP_GRANDE,False,3),
+                                            "caminar": cargar_sprites(3,RUNNING_GRANDE,False,escala=3),
+                                            "Base": cargar_sprites(1,BASE_GRANDE,False,escala=3),
+                                            "Reverso_caminar": voltear_sprites(cargar_sprites(3,RUNNING_GRANDE,False,escala=3)), 
+                                            "Agacharse": cargar_sprites(1,DOWN_GRANDE,False,escala=3)                                        
+                                }            
+        }
+        # Atributos para velocidades, salto y efectos de sonido
         self.altura_salto = 0
         self.gravedad = 0.5
         self.velocidad = 0
-        self.direccion = True  # True = derecha, False = izquierda
-        self.running = False
-        self.esta_quieto = True  # Nuevo atributo para controlar estado quieto
-        self.walking = False
         self.sonidos = SoundEfects()
+        self.estado_personaje = "pequeño"
         
-        
+        self.actualizar_estados()
+        self.agacharse()
+       
         # Atributos para animar 
-        self.movimiento = -1
         self.frame_actual = 0
         self.frame_tiempo = pygame.time.get_ticks()
         self.frame_carga = 40
-        self.fotogramas = 3
+        self.fotogramas = 3   
+    
+    def actualizar_estados(self):
+        sprites = self.sprites_mario[self.estado_personaje]
+        self.base = sprites["Base"]
+        self.caminando = sprites["caminar"]
+        self.jump = sprites["saltar"]
+        self.caminando_inverso = sprites["Reverso_caminar"]
+        self.salto_inverso = pygame.transform.flip(self.jump[0],True,False)
+        if self.estado_personaje =="grande": 
+            self.abajo = sprites["Agacharse"]
+            self.abajo_inverso = pygame.transform.flip(self.abajo[0],True,False)
         
+        self.image = self.base[0]
+        self.rect = self.image.get_rect()
+        self.rect.x = self.posicionX
+        self.rect.y = self.posicionY
+    
+    
     def correr(self): 
         velocidad = 4 if self.direccion else -4
         self.running = True
@@ -78,13 +97,14 @@ class Mario(Personaje):
         self.running = False
         self.esta_quieto = False
         
-        
-    
     def detener(self):
         self.running = False
         self.esta_quieto = True
         self.frame_actual = 0  # Resetear animación
-        self.voltear_personaje()  # Asegurar dirección correcta
+        if self.agachado:
+            self.agacharse()
+        else:
+            self.voltear_personaje() # Asegurar dirección correcta
         
     def saltar(self, velocidad_inicial=-12):
         if not self.esta_saltando:
@@ -94,10 +114,7 @@ class Mario(Personaje):
             self.altura_salto = velocidad_inicial
             
             self.image = self.jump[0] if self.direccion else self.salto_inverso
-            
-            
-           
-                      
+               
     def caer(self):
         if self.esta_saltando:
             self.altura_salto += self.gravedad
@@ -107,6 +124,7 @@ class Mario(Personaje):
                 self.rect.y = limite_piso
                 self.esta_saltando = False
                 self.altura_salto = 0
+                
                 # Al tocar el suelo, verificar si debe estar quieto
                 if not self.running:
                     self.esta_quieto = True
@@ -134,16 +152,28 @@ class Mario(Personaje):
                 # Usar la animación correcta según la dirección
                 sprites = self.caminando if self.direccion else self.caminando_inverso
                 self.image = sprites[self.frame_actual]
-
+                
+    def obtener_vida(self):
+        self.sonidos.reproducir("Vida")
+        self.vida +=1
+        self.contador = 0
+    
+    def agacharse(self):
+        if self.estado_personaje == "grande":
+            self.image = self.abajo[0] if self.direccion else self.abajo_inverso
+        else:
+            None
+    
     def update(self):
-        self.caer()
-         
+        self.caer()   
         # Lógica de estados de animación
-        if self.esta_saltando:
+        if self.agachado:
+            self.agacharse()
+        elif self.esta_saltando:
             self.isjumping()
         elif self.running or self.walking:
             frame = 40 if self.running else 150
             self.animar_personaje(frame_carga=frame,fotogramas=3)
         elif self.esta_quieto:
             self.voltear_personaje()
-       
+    

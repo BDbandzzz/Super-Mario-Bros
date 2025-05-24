@@ -14,6 +14,7 @@ class Enemigo(pygame.sprite.Sprite):
         
         self.sprites_goomba = cargar_sprites(2,ENEMY_IMAGE,False,escala=3)
         self.image = self.sprites_goomba[0]
+        self.death_goomba = cargar_sprites
         
         self.rect = self.image.get_rect()
         self.rect.x = posicionX
