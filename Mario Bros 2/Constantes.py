@@ -29,7 +29,10 @@ JUMP_GRANDE = os.path.join(ASSETS_PATH,"SpritesMario//saltoGrande//mario")
 DOWN_GRANDE = os.path.join(ASSETS_PATH,"SpritesMario//agacharseGrande//mario")
 
 # Imagenes para los poderes y bonus:
-COIN_PATH = os.path.join(ASSETS_PATH,"Coins//coins")
+COIN_PATH = os.path.join(ASSETS_PATH,"SpritesPowers//Coins//coins")
+HONGO_PATH = os.path.join(ASSETS_PATH,"SpritesPowers//hongoRojo//hongo")
+HONGO_VIDA_PATH = os.path.join(ASSETS_PATH,"SpritesPowers//hongoVida//hongo")
+ESTRELLA_PATH = os.path.join(ASSETS_PATH,"SpritesPowers//estrella//estrella")
 
 #Acceso a los efectos de sonido 
 SOUND_PATH = os.path.join(ASSETS_PATH,"soundEfect")

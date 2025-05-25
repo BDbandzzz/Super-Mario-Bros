@@ -18,7 +18,14 @@ class Poderes(pygame.sprite.Sprite):
         self.frame_actual = 0
         self.frame_tiempo = pygame.time.get_ticks()
       
-      
+    def asignar_rect(self,imagen,X,Y):
+        baseX = X
+        baseY = Y
+        self.image = imagen
+        self.rect = self.image.get_rect()
+        self.rect.x = baseX
+        self.rect.y = baseY
+    
     def animacion(self,lista,framerate,fotogramas):
         now = pygame.time.get_ticks()
         if now - self.frame_tiempo > framerate:
@@ -39,20 +46,49 @@ class Bonus(Poderes):
         self.rect.y = self.posicionY
         
     def update(self):
-        self.animacion(self.coins, 300, 3)
+        self.animacion(self.coins, 300, 2)
         
         
         
 class Hongo(Poderes):
-    pass
+    def __init__(self, nombre, posicionX, posicionY):
+        super().__init__(nombre, posicionX, posicionY) 
+        self.hongo = cargar_sprites(2,HONGO_PATH,False,escala=3,div=None)
+        self.image = self.hongo[0]
+        self.rect = self.image.get_rect()
+        self.rect.x = self.posicionX
+        self.rect.y = self.posicionY
     
+    def update(self):
+        self.animacion(self.hongo,400,2)     
+
+
+
+class HongoVida(Poderes):
+    def __init__(self, nombre, posicionX, posicionY):
+        super().__init__(nombre, posicionX, posicionY) 
+        self.hongoVida = cargar_sprites(2,HONGO_VIDA_PATH,False,escala=3,div=None)        
+        self.image = self.hongoVida[0]
+        self.rect = self.image.get_rect()
+        self.rect.x = self.posicionX
+        self.rect.y = self.posicionY
     
+    def update(self):
+        self.animacion(self.hongoVida,200,2)     
+
+
+class Estrella(Poderes):
+    def __init__(self, nombre, posicionX, posicionY):
+        super().__init__(nombre, posicionX, posicionY) 
+        self.estrella = cargar_sprites(4,ESTRELLA_PATH,False,escala=3, div= None)
+        self.image = self.estrella[0]
+        self.rect = self.image.get_rect()
+        self.rect.x = self.posicionX
+        self.rect.y = self.posicionY
+    def update(self):
+        self.animacion(self.estrellaa,200,4)     
+
+
     
-
-        
-        
-
-
-
 
 

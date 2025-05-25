@@ -37,8 +37,8 @@ class Mario(Personaje):
         self.running = False # Evalua so esa corriendo o caminando
         self.walking = False
         self.esta_quieto = True  # Controla y evalua si el personaje esta moviendose o no
-        self.agachado = False
-        
+        self.agachado = False   
+        self.activar_salto_goomba = False   
         self.sprites_mario = { "pequeño": { "saltar": cargar_sprites(1,JUMP_PATH,False,3),
                                             "caminar": cargar_sprites(3,RUNNING_PATH,False,escala=3),
                                             "Base": cargar_sprites(1,PLAYER_IMAGE,False,escala=3),
@@ -51,7 +51,15 @@ class Mario(Personaje):
                                             "Agacharse": cargar_sprites(1,DOWN_GRANDE,False,escala=3)                                        
                                 }            
         }
-        # Atributos para velocidades, salto y efectos de sonido
+
+        self.base = self.sprites_mario["pequeño"]["Base"]
+        self.image = self.base[0]
+        self.rect = self.image.get_rect()
+        self.rect.x = posicionX
+        self.rect.y = posicionY
+
+
+# Atributos para velocidades, salto y efectos de sonido
         self.altura_salto = 0
         self.gravedad = 0.5
         self.velocidad = 0
@@ -66,37 +74,60 @@ class Mario(Personaje):
         self.frame_tiempo = pygame.time.get_ticks()
         self.frame_carga = 40
         self.fotogramas = 3   
-    
+        # Contador 
+        self.resetear_contador = False
+        self.contador = 0
+        
+
+
     def actualizar_estados(self):
+        
         sprites = self.sprites_mario[self.estado_personaje]
         self.base = sprites["Base"]
         self.caminando = sprites["caminar"]
         self.jump = sprites["saltar"]
         self.caminando_inverso = sprites["Reverso_caminar"]
         self.salto_inverso = pygame.transform.flip(self.jump[0],True,False)
+        
+        
         if self.estado_personaje =="grande": 
             self.abajo = sprites["Agacharse"]
             self.abajo_inverso = pygame.transform.flip(self.abajo[0],True,False)
+            self.redimensionar()
+        else:
+            self.redimensionar()
+            
+    def redimensionar(self):
+        # Guarda la posición de los pies antes de cambiar el rect
+        base_y = self.rect.y + self.rect.height
+        base_x = self.rect.x
+        # Cambia la imagen y el rect
         
         self.image = self.base[0]
         self.rect = self.image.get_rect()
-        self.rect.x = self.posicionX
-        self.rect.y = self.posicionY
+        
+        
+        # Reasigna la posición para que los pies queden igual
+        self.rect.x = base_x
+        self.rect.y = base_y - self.rect.height
+        
     
     
     def correr(self): 
-        velocidad = 4 if self.direccion else -4
-        self.running = True
-        self.esta_quieto = False
-        self.mover(dx=velocidad)
+        if not self.agachado:
+            velocidad = 4 if self.direccion else -4
+            self.running = True
+            self.esta_quieto = False
+            self.mover(dx=velocidad)
     
     def caminar(self):
-        caminado = 4 if self.direccion else -4
-        self.mover(dx=caminado)
-        self.walking = True
-        self.running = False
-        self.esta_quieto = False
-        
+        if not self.agachado:
+            caminado = 4 if self.direccion else -4
+            self.mover(dx=caminado)
+            self.walking = True
+            self.running = False
+            self.esta_quieto = False
+            
     def detener(self):
         self.running = False
         self.esta_quieto = True
@@ -112,8 +143,14 @@ class Mario(Personaje):
             self.esta_quieto = False
             self.sonidos.reproducir("Salto")
             self.altura_salto = velocidad_inicial
-            
-            self.image = self.jump[0] if self.direccion else self.salto_inverso
+        elif self.activar_salto_goomba:
+            velocidad_inicial = -5
+            self.altura_salto = velocidad_inicial
+            self.esta_saltando = True
+            self.esta_quieto = False
+            self.activar_salto_goomba = False
+        self.image = self.jump[0] if self.direccion else self.salto_inverso
+        
                
     def caer(self):
         if self.esta_saltando:
@@ -156,8 +193,11 @@ class Mario(Personaje):
     def obtener_vida(self):
         self.sonidos.reproducir("Vida")
         self.vida +=1
-        self.contador = 0
-    
+        if self.resetear_contador:
+         self.contador = 0
+         self.resetear_contador = False
+        
+         
     def agacharse(self):
         if self.estado_personaje == "grande":
             self.image = self.abajo[0] if self.direccion else self.abajo_inverso
@@ -176,4 +216,3 @@ class Mario(Personaje):
             self.animar_personaje(frame_carga=frame,fotogramas=3)
         elif self.esta_quieto:
             self.voltear_personaje()
-    

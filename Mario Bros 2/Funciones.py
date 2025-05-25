@@ -1,5 +1,6 @@
 from Constantes import *
 import pygame
+import random
 
 def cargar_sprites(cantidad, path,del_fondo, escala=None,div = None):
     imagenes = []
@@ -35,3 +36,22 @@ def voltear_sprites(imagenes):
    return [pygame.transform.flip(imagen,True,False) for imagen in imagenes]
 
 
+def cargar_elementos(cantidad,nombre,clase,lista,X,Y):
+    if cantidad is not None:
+        for i in range (cantidad):
+            nombre = clase(nombre=f"{nombre}",posicionX= X, posicionY= Y)
+            lista.add(nombre)  
+    else:
+        nombre = clase(nombre=f"{nombre}",posicionX= X, posicionY= Y)
+        lista.add(nombre)
+
+def coins_random(cantidad,nombre,clase,lista,X,Y):
+      if cantidad is not None:
+        for i in range (cantidad):
+            nombre = clase(nombre=f"{nombre}",posicionX= random.randint(20,X), posicionY= random.randint(Y,580))
+            lista.add(nombre)
+        else:
+            nombre = clase(nombre=f"{nombre}",posicionX= X, posicionY= Y)
+            lista.add(nombre)
+            
+            
