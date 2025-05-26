@@ -11,20 +11,17 @@ class Poderes(pygame.sprite.Sprite):
         self.posicionX = posicionX
         self.posicionY = posicionY
         self.contador = 0
-        self.hongo = None
-        self.hongoVida = None
         
     # Atributos para animar:     
         self.frame_actual = 0
         self.frame_tiempo = pygame.time.get_ticks()
       
-    def asignar_rect(self,imagen,X,Y):
-        baseX = X
-        baseY = Y
-        self.image = imagen
-        self.rect = self.image.get_rect()
-        self.rect.x = baseX
-        self.rect.y = baseY
+    def mover(self,dx=0,dy=0):
+        self.rect.x += dx
+        self.rect.y += dy
+        self.rect.x = max(0, min(self.rect.x,  ANCHURA_PANTALLA- self.rect.width))
+        self.rect.y = max(0, min(self.rect.y, (ALTURA_PANTALLA-82) - self.rect.height))
+        
     
     def animacion(self,lista,framerate,fotogramas):
         now = pygame.time.get_ticks()
@@ -58,7 +55,24 @@ class Hongo(Poderes):
         self.rect = self.image.get_rect()
         self.rect.x = self.posicionX
         self.rect.y = self.posicionY
+        self.direccion = -1
+        
+        
+
+        self.hongo_recogido = False
+        self.sumar_hongos = 1
+        self.tiempo_recogido = pygame.time.get_ticks()
     
+    
+    
+    
+    def mover_hongo(self):
+        mover = self.direccion * 3
+        self.mover(dx=mover)
+        if self.rect.x <= 0:
+            self.direccion *=-1
+            
+         
     def update(self):
         self.animacion(self.hongo,400,2)     
 
@@ -72,9 +86,18 @@ class HongoVida(Poderes):
         self.rect = self.image.get_rect()
         self.rect.x = self.posicionX
         self.rect.y = self.posicionY
+        self.direccion = -1
+        
+    def mover_hongo_vida(self):
+        mover_hongo = self.direccion * 3
+        self.mover(dx=mover_hongo)
+        if self.rect.x <= 0:
+            self.direccion *=-1
+            
     
     def update(self):
         self.animacion(self.hongoVida,200,2)     
+    
 
 
 class Estrella(Poderes):
@@ -85,8 +108,46 @@ class Estrella(Poderes):
         self.rect = self.image.get_rect()
         self.rect.x = self.posicionX
         self.rect.y = self.posicionY
+        
+        self.esta_saltando = False
+        self.gravedad = 0.5
+        self.altura_salto = 0
+        self.direccion =-1
+        
+        
+    def mover_estrella(self):
+        mover_estrella = self.direccion * 3
+        self.mover(dx=mover_estrella)
+        if self.rect.x <= 0:
+            self.direccion *=-1
+                
+    
+    def salto(self,velocidad_inicial =-10):
+        if not self.esta_saltando:
+            self.altura_salto = velocidad_inicial
+            self.esta_saltando = True
+               
+    def caer(self):
+        if self.esta_saltando:
+            self.altura_salto += self.gravedad
+            self.mover(dy=self.altura_salto)
+            limite_piso = (ALTURA_PANTALLA-82) - self.rect.height
+            
+            if self.rect.y >= limite_piso:
+                self.rect.y = limite_piso
+                self.esta_saltando = False   
+                self.altura_salto = 0 
+
+            
+        
     def update(self):
-        self.animacion(self.estrellaa,200,4)     
+        self.animacion(self.estrella,200,4)    
+        if not self.esta_saltando:
+            self.salto()
+        else:
+            self.caer()
+        self.mover_estrella()
+        
 
 
     

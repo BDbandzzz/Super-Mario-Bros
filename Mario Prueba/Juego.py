@@ -34,7 +34,7 @@ def mover_enemigo(Enemigo):
     delta_x = 3 * Enemigo.direccion
     Enemigo.mover(dx=delta_x)
     if Enemigo.posicionX < -10:
-        all_lista_sprites.remove(Goomba)
+        Enemigo.direccion *=-1
 
 
 
