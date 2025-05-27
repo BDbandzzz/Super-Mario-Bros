@@ -50,5 +50,5 @@ def coins_random(cantidad,nombre,clase,lista,X,Y):
         else:
             nombre = clase(nombre=f"{nombre}",posicionX= X, posicionY= Y)
             lista.add(nombre)
-            
-            
+
+

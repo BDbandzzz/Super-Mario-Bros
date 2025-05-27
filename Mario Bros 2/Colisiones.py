@@ -28,11 +28,9 @@ def chocar_enemigo(personaje, enemigo, efecto_sonido):
                 efecto_sonido.reproducir("Pequeño")
             elif personaje.estado_personaje == "pequeño" and not personaje.inmunidad:
                 personaje.actualizar_estados()
-                efecto_sonido.reproducir("Muerte")
-                print("Vida restada. Vidas actuales:", personaje.vida)
+                personaje.vida -=1
                  
 def hongo_Rojo(personaje,hongo):
-    print("Inmunidad:", personaje.inmunidad, "Estado:", personaje.estado_personaje)
     if personaje.estado_personaje == "pequeño":
         personaje.estado_personaje = "grande"
         personaje.actualizar_estados() 
@@ -40,5 +38,5 @@ def hongo_Rojo(personaje,hongo):
         
 
 def inmunidad(personaje,efecto_sonido):
-    personaje.activar_inmunidad() 
+    personaje.inmunidad = True
     efecto_sonido.reproducir_musica_fondo("Estrella",loop=False)

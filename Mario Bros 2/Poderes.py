@@ -3,11 +3,6 @@ from Constantes import *
 from Funciones import cargar_sprites
 
 
-# Detalles a mejorar:
-# 1: poliformismo: Se puede simplificar la estructura como esta en el el archivo enemigos, donde cada metodo varia
-# su funcionalidad dependiendo lo que se requiera.
-
-
 # Clase poderes
 class Poderes(pygame.sprite.Sprite):
     def __init__(self, nombre, posicionX, posicionY):
@@ -15,7 +10,9 @@ class Poderes(pygame.sprite.Sprite):
         self.nombre = nombre
         self.posicionX = posicionX
         self.posicionY = posicionY
+        
         self.contador = 0
+        self.direccion = -1
         
     # Atributos para animar:     
         self.frame_actual = 0
@@ -34,8 +31,13 @@ class Poderes(pygame.sprite.Sprite):
             self.frame_tiempo = now
             self.frame_actual = (self.frame_actual + 1) % fotogramas
             self.image = lista[self.frame_actual]
-           
-        
+    
+    def movimiento_automatico(self):
+        mover = self.direccion * 3
+        self.mover(dx=mover)
+        if self.rect.x <= 0:
+         self.direccion *=-1 
+
         # Cargar sprites al crear el objeto    
   
 class Bonus(Poderes):
@@ -49,6 +51,7 @@ class Bonus(Poderes):
         
     def update(self):
         self.animacion(self.coins, 300, 2)
+        self.movimiento_automatico()
         
         
         
@@ -60,23 +63,13 @@ class Hongo(Poderes):
         self.rect = self.image.get_rect()
         self.rect.x = self.posicionX
         self.rect.y = self.posicionY
-        self.direccion = -1
         
         self.recogido = False
-        self.sumar_hongos = 1
         self.tiempo_recogido = pygame.time.get_ticks()
-    
-    
-    def mover_hongo(self):
-        mover = self.direccion * 3
-        self.mover(dx=mover)
-        if self.rect.x <= 0:
-            self.direccion *=-1 # Funcion no llamada, porque no lo requiere.
-            
          
     def update(self):
         self.animacion(self.hongo,400,2)     
-
+        self.movimiento_automatico()
 
 
 class HongoVida(Poderes):
@@ -87,17 +80,11 @@ class HongoVida(Poderes):
         self.rect = self.image.get_rect()
         self.rect.x = self.posicionX
         self.rect.y = self.posicionY
-        self.direccion = -1
-        
-    def mover_hongo_vida(self):
-        mover_hongo = self.direccion * 3
-        self.mover(dx=mover_hongo)
-        if self.rect.x <= 0:
-            self.direccion *=-1 # Funcion no llamada, porque no lo requiere.
+      
             
-    
     def update(self):
-        self.animacion(self.hongoVida,200,2)     
+        self.animacion(self.hongoVida,200,2) 
+        self.movimiento_automatico()    
     
 
 
@@ -121,6 +108,7 @@ class Estrella(Poderes):
         self.mover(dx=mover_estrella)
         if self.rect.x <= 0:
             self.direccion *=-1
+            
                 
     
     def salto(self,velocidad_inicial =-10):

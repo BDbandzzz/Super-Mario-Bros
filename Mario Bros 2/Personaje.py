@@ -136,7 +136,7 @@ class Mario(Personaje):
         self.running = False
         self.walking = False
         self.esta_quieto = True
-        self.agacharse() if self.agachado else self.voltear_personaje()
+        self.agacharse() if self.agachado else self.voltear_base()
         
     def saltar(self, velocidad_inicial=-12):
         if not self.esta_saltando:
@@ -153,8 +153,7 @@ class Mario(Personaje):
             self.esta_quieto = False
             self.activar_salto_goomba = False
         self.image = self.jump[0] if self.direccion else self.salto_inverso
-        
-               
+           
     def caer(self):
         if self.esta_saltando:
             self.altura_salto += self.gravedad
@@ -164,14 +163,14 @@ class Mario(Personaje):
                 self.rect.y = limite_piso
                 self.esta_saltando = False
                 self.altura_salto = 0
-                
+        
                 if not self.running:
                     self.esta_quieto = True
                 
     def isjumping(self):
         self.image = self.jump[0] if self.direccion else self.salto_inverso
     
-    def voltear_personaje(self):
+    def voltear_base(self):
         self.original = self.base[0]
         self.inverso = pygame.transform.flip(self.base[0], True, False)
         if self.direccion:
@@ -196,32 +195,23 @@ class Mario(Personaje):
         if self.resetear_contador:
          self.contador = 0
          self.resetear_contador = False
-        
          
     def agacharse(self):
         if self.estado_personaje == "grande":
             self.image = self.abajo[0] if self.direccion else self.abajo_inverso
-        else:
-            None
-    
-    def activar_inmunidad(self):
-      
-        self.inmunidad = True
-    
             
+             
+
     def actualizar_inmunidad(self):
         if self.inmunidad:
             inmunidad_time = pygame.time.get_ticks()
             if inmunidad_time - self.inmunidad_time > 14000:
                 self.inmunidad = False
     
-        
-    
     def morir(self):
-        if self.estado_personaje =="pequeño" and self.vida <=0:
+        if self.vida == 0:
             self.game_over = True
-    
-    
+            
     def update(self):
         self.actualizar_inmunidad()
         self.caer()   
@@ -236,4 +226,4 @@ class Mario(Personaje):
             frame = 40 if self.running else 150
             self.animar_personaje(frame_carga=frame,fotogramas=3)
         elif self.esta_quieto:
-            self.voltear_personaje()
+            self.voltear_base()

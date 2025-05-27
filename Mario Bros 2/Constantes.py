@@ -49,4 +49,3 @@ SOUND_PATH = os.path.join(ASSETS_PATH,"soundEfect")
 
 # Acceso a la fuente de letra 
 FONT_PATH = os.path.join(ASSETS_PATH,"Letra//SMW.ttf")
-

@@ -151,10 +151,11 @@ class Juego:
         y = 580 
       
         now = pygame.time.get_ticks()
-        if self.hongos_recogidos and (now - self.calcular_tiempo_drop) > 9000:
-            nuevo_hongo = Hongo("hongo",x,y)
-            self.hongos.add(nuevo_hongo) 
-            self.hongos_recogidos = False
+        if len(self.hongos) == 0:
+            if self.hongos_recogidos and (now - self.calcular_tiempo_drop) > 9000:
+                nuevo_hongo = Hongo("hongo",x,y)
+                self.hongos.add(nuevo_hongo) 
+                self.hongos_recogidos = False
     
     def drop_vidas(self):
         x = random.randint(400,1000)
@@ -166,6 +167,7 @@ class Juego:
             self.vidas_recogidos = False
             
     def drop_enemigos(self):
+        
         x = random.randint(800,1100)  
         y = 580 
         xgoomba = random.randint(700,900)  
@@ -174,14 +176,13 @@ class Juego:
             new_goomba = Goomba("Goomba", xgoomba,y)
             self.all_lista_enemigos.add(new_enemy)
             self.all_lista_enemigos.add(new_goomba)
-        pass
-    
-        
-    
-    def detectar_inmunidad(self):       
+
+
+
+    def detectar_cambio_cancion(self):       
         if self.inmunidad_anterior and not self.personaje.inmunidad:
                 self.sonido_Fondo.reproducir_musica_fondo("DonkeyK")
-                self.inmunidad_anterior = self.personaje.inmunidad
+        self.inmunidad_anterior = self.personaje.inmunidad
         
     
     
@@ -204,28 +205,24 @@ class Juego:
             )
             self.colisiones_enemigos()
             self.drop_hongos() if len(self.hongos) == 0 and self.hongos_recogidos else None 
-            self.drop_vidas() if len(self.hongo_vida) == 0 and self.vidas_recogidos else None
+            self.drop_vidas() 
             self.drop_enemigos()
             self.colisiones_Hongo()
             self.colisiones_hongoVidas()
             self.colisiones_coins()
             self.colisiones_estrella()
-      
-          
+            self.detectar_cambio_cancion()            
+            self.generar_texto(f"vidas: {self.personaje.vida}", f" coins: {self.personaje.coin}")
             
             if self.personaje.game_over:
                 self.juego_activo = False
-                print("done")
-            print("Inmunidad:", self.personaje.inmunidad, "Estado:", self.personaje.estado_personaje)
-            self.generar_texto(f"vidas: {self.personaje.vida}", f" coins: {self.personaje.coin}")
-
+             
+            
+            
             pygame.display.flip()
             self.FPS.tick(60)
 
         pygame.quit()
 
-if __name__ == "__main__":
-    
-    juego = Juego()
-    juego.bucle_principal()
 
+ 

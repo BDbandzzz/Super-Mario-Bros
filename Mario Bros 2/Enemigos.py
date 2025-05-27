@@ -40,7 +40,7 @@ class Goomba(Enemigo):
 
         self.animaciones_ticks = 2
     
-   # Si quieres que se active el movimiento del hongo, llama la funcion dentro del update o delbucle principal 
+   # Si quieres que se active el movimiento del hongo, llama la funcion dentro del update o del bucle principal 
     def movimiento_enemigo(self):
         direccion = 3 * self.movimiento
         self.mover(dx = direccion)
