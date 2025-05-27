@@ -4,7 +4,6 @@ import random
 
 def cargar_sprites(cantidad, path,del_fondo, escala=None,div = None):
     imagenes = []
-    
     for i in range(cantidad):
         ruta = f"{path}{i}.png"
         try:
@@ -21,13 +20,11 @@ def cargar_sprites(cantidad, path,del_fondo, escala=None,div = None):
                 ancho = int(image.get_width() // div)
                 alto = int(image.get_height() // div)
                 image = pygame.transform.scale(image, (ancho, alto))
-
             if del_fondo:
                 image.set_colorkey(BLACK)  # Color negro como transparente
             imagenes.append(image)
         except Exception as e:
             print(f" Error en el archivo {ruta}: {e}")
-    
     
     return imagenes
 

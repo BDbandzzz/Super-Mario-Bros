@@ -14,7 +14,7 @@ class SoundEfects():
         if nombre in self.sonidos:
             self.sonidos[nombre].play()
             
-    def reproducir_musica_fondo(self,nombre, volumen =0.3,loop=True):
+    def reproducir_musica_fondo(self,nombre, volumen =0.5,loop=True):
        self.sonidos_fondo = { "DonkeyK":"Assets//soundEfect//DonkeyK.wav",
                                 "MarioB":"Assets//soundEfect//MarioBros.waw",
                                 "MMX3": "Assets//SoundEfect//MMX3.wav",

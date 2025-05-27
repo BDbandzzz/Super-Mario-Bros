@@ -63,7 +63,7 @@ class Goomba(Enemigo):
         tiempo = pygame.time.get_ticks()
         if self.muerte:
             self.image = image[0]
-            if tiempo - self.tiempo_muerte > 2000:
+            if tiempo - self.tiempo_muerte > 1000:
                 self.kill()
     
     def update(self):

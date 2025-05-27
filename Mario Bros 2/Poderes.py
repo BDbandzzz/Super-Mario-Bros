@@ -3,6 +3,11 @@ from Constantes import *
 from Funciones import cargar_sprites
 
 
+# Detalles a mejorar:
+# 1: poliformismo: Se puede simplificar la estructura como esta en el el archivo enemigos, donde cada metodo varia
+# su funcionalidad dependiendo lo que se requiera.
+
+
 # Clase poderes
 class Poderes(pygame.sprite.Sprite):
     def __init__(self, nombre, posicionX, posicionY):
@@ -57,20 +62,16 @@ class Hongo(Poderes):
         self.rect.y = self.posicionY
         self.direccion = -1
         
-        
-
-        self.hongo_recogido = False
+        self.recogido = False
         self.sumar_hongos = 1
         self.tiempo_recogido = pygame.time.get_ticks()
-    
-    
     
     
     def mover_hongo(self):
         mover = self.direccion * 3
         self.mover(dx=mover)
         if self.rect.x <= 0:
-            self.direccion *=-1
+            self.direccion *=-1 # Funcion no llamada, porque no lo requiere.
             
          
     def update(self):
@@ -92,7 +93,7 @@ class HongoVida(Poderes):
         mover_hongo = self.direccion * 3
         self.mover(dx=mover_hongo)
         if self.rect.x <= 0:
-            self.direccion *=-1
+            self.direccion *=-1 # Funcion no llamada, porque no lo requiere.
             
     
     def update(self):
@@ -137,8 +138,6 @@ class Estrella(Poderes):
                 self.rect.y = limite_piso
                 self.esta_saltando = False   
                 self.altura_salto = 0 
-
-            
         
     def update(self):
         self.animacion(self.estrella,200,4)    

@@ -36,18 +36,18 @@ class Mario(Personaje):
        # Estados de mario en logica booleana 
         self.esta_saltando = False 
         self.direccion = True  # True = derecha, False = izquierda
-        self.running = False # Evalua so esa corriendo o caminando
-        self.walking = False
+        self.running = False # Evalua si  esta caminando
+        self.walking = False # Evaluar si esta corriendo
         self.esta_quieto = True  # Controla y evalua si el personaje esta moviendose o no
-        self.agachado = False   
-        self.activar_salto_goomba = False   
-        self.inmunidad = False 
+        self.agachado = False   # Detectar si el personaje esta agachado o no
+        self.activar_salto_goomba = False  # Detectar colision con el goomba y generar rebote 
+        self.inmunidad = False  # Para detectar la inmunidad
         
         # Funciones para calcular el tiempo
         self.frame_tiempo = pygame.time.get_ticks()
         self.inmunidad_time = pygame.time.get_ticks()
         
-        
+        # Se cargan las imagenes para realizar animaciones.
         self.sprites_mario = { "pequeño": { "saltar": cargar_sprites(1,JUMP_PATH,False,3),
                                             "caminar": cargar_sprites(3,RUNNING_PATH,False,escala=3),
                                             "Base": cargar_sprites(1,PLAYER_IMAGE,False,escala=3),
@@ -61,22 +61,25 @@ class Mario(Personaje):
                                 }            
         }
     # Imagenes iniciales 
-        self.base = self.sprites_mario["pequeño"]["Base"]
+        self.estado_personaje = "pequeño"
+        self.base = self.sprites_mario[self.estado_personaje]["Base"]
         self.image = self.base[0]
         self.rect = self.image.get_rect()
         self.rect.x = posicionX
         self.rect.y = posicionY
-
-
-# Atributos para velocidades, salto y efectos de sonido
+        
+        
+        
+        self.actualizar_estados()
+        self.agacharse()
+        
+        # Atributos para velocidades, salto y efectos de sonido
         self.altura_salto = 0
         self.gravedad = 0.5
         self.velocidad = 0
         self.sonidos = SoundEfects()
-        self.estado_personaje = "pequeño"
         
-        self.actualizar_estados()
-        self.agacharse()
+     
        
         # Atributos para animar 
         self.frame_actual = 0
@@ -93,30 +96,29 @@ class Mario(Personaje):
         self.jump = sprites["saltar"]
         self.caminando_inverso = sprites["Reverso_caminar"]
         self.salto_inverso = pygame.transform.flip(self.jump[0],True,False)
-    
-        
         if self.estado_personaje =="grande": 
             self.abajo = sprites["Agacharse"]
             self.abajo_inverso = pygame.transform.flip(self.abajo[0],True,False)
             self.redimensionar()
         else:
             self.redimensionar()
-            
-    def redimensionar(self):
+      
+    def redimensionar(self): # Guarda y ajusta el resize de la imagen al actualizar el estado de mario  
         # Guarda la posición de los pies antes de cambiar el rect
         base_y = self.rect.y + self.rect.height
         base_x = self.rect.x
-        # Cambia la imagen y el rect
         
+        # Cambia la imagen y el rect 
         self.image = self.base[0]
         self.rect = self.image.get_rect()
         
-        # Reasigna la posición para que los pies queden igual
+        # Reasigna la posición para que mario siempre este en el suelo
+        # Bug: Si te mantienes agachado y te vuelves pequeño, mario queda en el aire.
         self.rect.x = base_x
         self.rect.y = base_y - self.rect.height 
+    
     def correr(self): 
-        
-        if not self.agachado:
+        if not self.agachado: # Se hace para evitar que, por ejemplo el personaje corra agachado
             velocidad = 4 if self.direccion else -4
             self.running = True
             self.esta_quieto = False
@@ -134,10 +136,7 @@ class Mario(Personaje):
         self.running = False
         self.walking = False
         self.esta_quieto = True
-        if self.agachado:
-            self.agacharse()
-        else:
-            self.voltear_personaje() 
+        self.agacharse() if self.agachado else self.voltear_personaje()
         
     def saltar(self, velocidad_inicial=-12):
         if not self.esta_saltando:
@@ -166,7 +165,6 @@ class Mario(Personaje):
                 self.esta_saltando = False
                 self.altura_salto = 0
                 
-                # Al tocar el suelo, verificar si debe estar quieto
                 if not self.running:
                     self.esta_quieto = True
                 
@@ -174,12 +172,8 @@ class Mario(Personaje):
         self.image = self.jump[0] if self.direccion else self.salto_inverso
     
     def voltear_personaje(self):
-       
-        # Actualizar tanto la imagen original como la inversa
         self.original = self.base[0]
         self.inverso = pygame.transform.flip(self.base[0], True, False)
-        
-        # Establecer la imagen correcta según dirección
         if self.direccion:
             self.image = self.original
         else:
@@ -211,11 +205,17 @@ class Mario(Personaje):
             None
     
     def activar_inmunidad(self):
-        inmunidad_time = pygame.time.get_ticks()
+      
         self.inmunidad = True
-        if inmunidad_time - self.inmunidad_time > 14000:
-            self.inmunidad = False
     
+            
+    def actualizar_inmunidad(self):
+        if self.inmunidad:
+            inmunidad_time = pygame.time.get_ticks()
+            if inmunidad_time - self.inmunidad_time > 14000:
+                self.inmunidad = False
+    
+        
     
     def morir(self):
         if self.estado_personaje =="pequeño" and self.vida <=0:
@@ -223,7 +223,7 @@ class Mario(Personaje):
     
     
     def update(self):
-        self.activar_inmunidad()
+        self.actualizar_inmunidad()
         self.caer()   
         self.morir()
 

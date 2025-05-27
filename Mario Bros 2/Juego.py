@@ -12,9 +12,11 @@ from Funciones import cargar_elementos, coins_random
 
 class Juego:
     def __init__(self):
-        # Inicialización de Pygame
+        # Inicialización de Pygame y mesclador de sonido 
         pygame.init()
         pygame.mixer.init()
+        
+        # Elementos de pantalla 
         self.PANTALLA = pygame.display.set_mode([ANCHURA_PANTALLA, ALTURA_PANTALLA])
         self.FPS = pygame.time.Clock()
         self.background = pygame.image.load(BACKGROUND_IMAGE).convert_alpha()
@@ -35,20 +37,29 @@ class Juego:
         cargar_elementos(1, "estrella", Estrella, self.stars, X=800, Y=580)
         cargar_elementos(1, "koopa",Koppa,self.all_lista_enemigos,X=700,Y=580)
 
+        # Instanciamos el personaje principal.    
         self.personaje = Mario("Mario", posicionX=0, posicionY=580)
         self.all_lista_sprites.add(self.personaje)
 
+        
+        # Se establece el sonido de fondo, "Nombre" 
+        # indica el sonido que se va a reproducir dentro del diccionario "self.sonidos_fondo"
         self.sonido_Fondo = SoundEfects()
         self.sonido_Fondo.reproducir_musica_fondo(nombre="DonkeyK")
-
         self.juego_activo = True
+        
+        # Estados para imunidad y hongos recogidos 
+        self.inmunidad_anterior = self.personaje.inmunidad
+        self.hongos_recogidos = False
+        self.vidas_recogidos = False
+
 
     def manejar_personaje(self):
         movimiento_activo = False
         self.personaje.agachado = False
         self.personaje.running = False
         self.personaje.walking = False
-
+    
         keys = pygame.key.get_pressed()
         if keys[pygame.K_DOWN]:
             if self.personaje.estado_personaje == "grande":
@@ -76,11 +87,11 @@ class Juego:
         if not movimiento_activo:
             self.personaje.detener()
 
-    def actualizar_sprites(self, *groups):
+    def actualizar_sprites(self, *groups): # Iteramos y actualizamos la lista de sprites o sprites individuales.
         for grupo in groups:
             grupo.update()
 
-    def dibujar_en_pantalla(self, fondo, *groups):
+    def dibujar_en_pantalla(self, fondo, *groups): # Iteramos individualmente y dibujamos en pantalla.
         self.PANTALLA.blit(fondo, (0, 0))
         for group in groups:
             group.draw(self.PANTALLA)
@@ -106,7 +117,9 @@ class Juego:
         if colisiones:
             for colision in colisiones:
                 if isinstance(colision, Hongo):
-                    hongo_Rojo(self.personaje)
+                    hongo_Rojo(self.personaje,self.hongos)
+                    self.calcular_tiempo_drop = pygame.time.get_ticks()
+                    self.hongos_recogidos = True
                     self.sonido_Fondo.reproducir("Hongo")
 
     def colisiones_hongoVidas(self):
@@ -114,6 +127,8 @@ class Juego:
         if colisiones:
             for colision in colisiones:
                 if isinstance(colision, HongoVida):
+                    self.calcular_hongo_vida_drop = pygame.time.get_ticks()
+                    self.vidas_recogidos = True
                     self.personaje.obtener_vida()
 
     def colisiones_estrella(self):
@@ -124,16 +139,54 @@ class Juego:
                     inmunidad(self.personaje,self.sonido_Fondo)
 
     def generar_texto(self, *groups):
-        fuente = pygame.font.Font(FONT_PATH, 60)
-        x = 200
+        fuente= pygame.font.Font(FONT_PATH, 60)
+        x = 250
         for texto in groups:
             superficie = fuente.render(f"{texto}: ", True, WHITE)
-            self.PANTALLA.blit(superficie, (x, 0))
+            self.PANTALLA.blit(superficie, (x, 40))
             x += 600
-
-    def bucle_principal(self):
-        inmunidad_anterior = self.personaje.inmunidad
+    
+    def drop_hongos(self):
+        x = random.randint(400,1000)
+        y = 580 
+      
+        now = pygame.time.get_ticks()
+        if self.hongos_recogidos and (now - self.calcular_tiempo_drop) > 9000:
+            nuevo_hongo = Hongo("hongo",x,y)
+            self.hongos.add(nuevo_hongo) 
+            self.hongos_recogidos = False
+    
+    def drop_vidas(self):
+        x = random.randint(400,1000)
+        y = 580
+        now = pygame.time.get_ticks()
+        if self.vidas_recogidos and (now- self.calcular_hongo_vida_drop) > 9000:
+            nueva_vida = HongoVida("Vida",x,y)
+            self.hongo_vida.add(nueva_vida) 
+            self.vidas_recogidos = False
+            
+    def drop_enemigos(self):
+        x = random.randint(800,1100)  
+        y = 580 
+        xgoomba = random.randint(700,900)  
+        if len(self.all_lista_enemigos) == 0:
+            new_enemy = Koppa("Koppa",x,y)
+            new_goomba = Goomba("Goomba", xgoomba,y)
+            self.all_lista_enemigos.add(new_enemy)
+            self.all_lista_enemigos.add(new_goomba)
+        pass
+    
         
+    
+    def detectar_inmunidad(self):       
+        if self.inmunidad_anterior and not self.personaje.inmunidad:
+                self.sonido_Fondo.reproducir_musica_fondo("DonkeyK")
+                self.inmunidad_anterior = self.personaje.inmunidad
+        
+    
+    
+    
+    def bucle_principal(self):
         while self.juego_activo:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -149,23 +202,22 @@ class Juego:
                 self.all_lista_enemigos, self.all_lista_sprites,
                 self.monedas, self.hongos, self.hongo_vida, self.stars
             )
+            self.colisiones_enemigos()
+            self.drop_hongos() if len(self.hongos) == 0 and self.hongos_recogidos else None 
+            self.drop_vidas() if len(self.hongo_vida) == 0 and self.vidas_recogidos else None
+            self.drop_enemigos()
             self.colisiones_Hongo()
             self.colisiones_hongoVidas()
             self.colisiones_coins()
-            self.colisiones_enemigos()
             self.colisiones_estrella()
+      
+          
             
-            if inmunidad_anterior and not self.personaje.inmunidad:
-                self.sonido_Fondo.reproducir_musica_fondo("DonkeyK")
-            inmunidad_anterior = self.personaje.inmunidad
-            
-            
-            contador_vidas = self.personaje.vida 
             if self.personaje.game_over:
                 self.juego_activo = False
                 print("done")
-
-            self.generar_texto(f"vidas: {contador_vidas}", f" coins: {self.personaje.coin}")
+            print("Inmunidad:", self.personaje.inmunidad, "Estado:", self.personaje.estado_personaje)
+            self.generar_texto(f"vidas: {self.personaje.vida}", f" coins: {self.personaje.coin}")
 
             pygame.display.flip()
             self.FPS.tick(60)
@@ -177,4 +229,3 @@ if __name__ == "__main__":
     juego = Juego()
     juego.bucle_principal()
 
-#o

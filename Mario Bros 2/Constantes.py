@@ -6,6 +6,8 @@ import os
 
 #Direccion de la carpeta
 ASSETS_PATH = "Assets"
+
+# Colores: 
 BLACK = (0, 0, 0)
 WHITE = (255,255,255)
 
@@ -44,6 +46,7 @@ ESTRELLA_PATH = os.path.join(ASSETS_PATH,"SpritesPowers//estrella//estrella")
 SOUND_PATH = os.path.join(ASSETS_PATH,"soundEfect")
 
 
-# Acceso a la fuente de letra
+
+# Acceso a la fuente de letra 
 FONT_PATH = os.path.join(ASSETS_PATH,"Letra//SMW.ttf")
 
