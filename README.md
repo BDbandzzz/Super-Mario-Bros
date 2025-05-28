@@ -4,14 +4,14 @@
 
 ## Descripción del Proyecto
 
-Este proyecto es un videojuego desarrollado con **Python** y **Pygame**, diseñado para replicar aspectos fundamentales del juego **Super Mario Bros** original. Desarrollado por estudiantes de la **Universidad del Valle Seccional Pacifico** 🔰
+Este proyecto es un videojuego desarrollado con **Python** y **Pygame**, diseñado para replicar aspectos fundamentales del juego **Super Mario Bros** original. Diseñado por estudiantes de la **Universidad del Valle Seccional Pacifico** 🔰
 
 
 ---
 
 ## Integrantes
 
-- Bryan David Garces Quintero
+- Bryan David Garces Quintero 
 - Jose Antonio Rodriguez.
 - Jermi Junior Varela Maldonado
 
