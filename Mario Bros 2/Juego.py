@@ -2,7 +2,7 @@ import pygame
 import os
 import random
 
-from SoundPlayer import SoundEfects
+from Sonidos import SoundEfects
 from Colisiones  import recojer_monedas, chocar_enemigo, hongo_Rojo,inmunidad
 from Constantes import *
 from Personaje  import Mario
@@ -12,6 +12,7 @@ from Funciones import cargar_elementos, coins_random
 
 class Juego:
     def __init__(self):
+        
         # Inicialización de Pygame y mesclador de sonido 
         pygame.init()
         pygame.mixer.init()
@@ -20,7 +21,9 @@ class Juego:
         self.PANTALLA = pygame.display.set_mode([ANCHURA_PANTALLA, ALTURA_PANTALLA])
         self.FPS = pygame.time.Clock()
         self.background = pygame.image.load(BACKGROUND_IMAGE).convert_alpha()
-
+        
+        
+        
         # Grupos de sprites
         self.all_lista_enemigos = pygame.sprite.Group()
         self.all_lista_sprites = pygame.sprite.Group()
@@ -61,26 +64,26 @@ class Juego:
         self.personaje.walking = False
     
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_DOWN]:
+        if keys[pygame.K_DOWN] or keys[pygame.K_s]:
             if self.personaje.estado_personaje == "grande":
                 movimiento_activo = False
                 self.personaje.agachado = True
 
-        if keys[pygame.K_LEFT]:
+        if keys[pygame.K_LEFT] or keys[pygame.K_a]:
             movimiento_activo = True
             self.personaje.direccion = False
             self.personaje.caminar()
-            if keys[pygame.K_x]:
+            if keys[pygame.K_x] or keys[pygame.K_RSHIFT]:
                 self.personaje.correr()
 
-        if keys[pygame.K_RIGHT]:
+        if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
             movimiento_activo = True
             self.personaje.direccion = True
             self.personaje.caminar()
-            if keys[pygame.K_x]:
+            if keys[pygame.K_x] or keys[pygame.K_RSHIFT]:
                 self.personaje.correr()
 
-        if keys[pygame.K_c]:
+        if keys[pygame.K_c] or keys[pygame.K_SPACE]:
             movimiento_activo = True
             self.personaje.saltar()
 

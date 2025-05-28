@@ -3,7 +3,7 @@ from Poderes import Bonus, Hongo,HongoVida
 from Enemigos import Goomba
 import pygame
 
-now = pygame.time.get_ticks 
+tiempo_inmunidad_base = pygame.time.get_ticks()
 
 def recojer_monedas(personaje):
      personaje.contador += 1
@@ -14,22 +14,29 @@ def recojer_monedas(personaje):
         
 def chocar_enemigo(personaje, enemigo, efecto_sonido):
     if (personaje.rect.bottom <= enemigo.rect.top + 10 and
-        personaje.rect.right > enemigo.rect.left and personaje.rect.left < enemigo.rect.right):
+        personaje.rect.right > enemigo.rect.left and 
+        personaje.rect.left < enemigo.rect.right):
         # Pisa al enemigo
         personaje.activar_salto_goomba = True
         personaje.saltar(velocidad_inicial=6)
         enemigo.muerte = True
     else:
-        if (personaje.rect.right > enemigo.rect.left and personaje.rect.left < enemigo.rect.right and
-            personaje.rect.bottom > enemigo.rect.top and personaje.rect.top < enemigo.rect.bottom):
+        if (personaje.rect.right > enemigo.rect.left and 
+            personaje.rect.left < enemigo.rect.right and
+            personaje.rect.bottom > enemigo.rect.top and 
+            personaje.rect.top < enemigo.rect.bottom):
             if personaje.estado_personaje == "grande" and not personaje.inmunidad:
                 personaje.estado_personaje = "pequeño"
                 personaje.actualizar_estados()
                 efecto_sonido.reproducir("Pequeño")
-            elif personaje.estado_personaje == "pequeño" and not personaje.inmunidad:
-                personaje.actualizar_estados()
+            elif(personaje.estado_personaje == "pequeño" 
+                 and not personaje.inmunidad) and not personaje.daño:
                 personaje.vida -=1
-                 
+                personaje.actualizar_estados()
+                personaje.daño = True  
+                personaje.daño_inmunidad = pygame.time.get_ticks()
+                efecto_sonido.reproducir("Antonio")
+               
 def hongo_Rojo(personaje,hongo):
     if personaje.estado_personaje == "pequeño":
         personaje.estado_personaje = "grande"

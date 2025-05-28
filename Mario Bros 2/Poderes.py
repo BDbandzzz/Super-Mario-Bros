@@ -51,8 +51,7 @@ class Bonus(Poderes):
         
     def update(self):
         self.animacion(self.coins, 300, 2)
-        self.movimiento_automatico()
-        
+
         
         
 class Hongo(Poderes):

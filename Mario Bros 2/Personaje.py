@@ -2,7 +2,7 @@
 import pygame
 from Constantes import *
 from Funciones import cargar_sprites,voltear_sprites
-from SoundPlayer import SoundEfects
+from Sonidos import SoundEfects
 
 
 class Personaje(pygame.sprite.Sprite):
@@ -42,11 +42,13 @@ class Mario(Personaje):
         self.agachado = False   # Detectar si el personaje esta agachado o no
         self.activar_salto_goomba = False  # Detectar colision con el goomba y generar rebote 
         self.inmunidad = False  # Para detectar la inmunidad
-        
+        self.daño = False
         # Funciones para calcular el tiempo
         self.frame_tiempo = pygame.time.get_ticks()
         self.inmunidad_time = pygame.time.get_ticks()
+        self.daño_inmunidad = pygame.time.get_ticks()
         
+                
         # Se cargan las imagenes para realizar animaciones.
         self.sprites_mario = { "pequeño": { "saltar": cargar_sprites(1,JUMP_PATH,False,3),
                                             "caminar": cargar_sprites(3,RUNNING_PATH,False,escala=3),
@@ -198,24 +200,30 @@ class Mario(Personaje):
          
     def agacharse(self):
         if self.estado_personaje == "grande":
-            self.image = self.abajo[0] if self.direccion else self.abajo_inverso
+            self.image = self.abajo[0] if self.direccion else self.abajo_inverso            
             
-             
-
     def actualizar_inmunidad(self):
         if self.inmunidad:
             inmunidad_time = pygame.time.get_ticks()
             if inmunidad_time - self.inmunidad_time > 14000:
                 self.inmunidad = False
-    
+                
+    def inmunidad_daño(self):
+        if self.daño:
+            daño = pygame.time.get_ticks()
+            if daño - self.daño_inmunidad> 3000:
+                self.daño = False
+            
     def morir(self):
         if self.vida == 0:
             self.game_over = True
-            
+                  
     def update(self):
         self.actualizar_inmunidad()
+        self.inmunidad_daño()
         self.caer()   
         self.morir()
+      
 
         # Lógica de estados de animación
         if self.agachado:
