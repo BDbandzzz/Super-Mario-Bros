@@ -22,6 +22,7 @@ Este proyecto es un videojuego desarrollado con **Python** y **Pygame**, diseña
 Este videojuego utiliza la librería `pygame` para gestionar gráficos, sonido y entradas del teclado. Estructurado en el paradigma **Programacion orientada a objetos** para manejar el jugador, enemigos, colisiones y  la lógica del juego.
 
 
+Pasos para probar el proyecto: 
 ```bash
 pip install pygame
 git clone https://github.com/TonySny/finalproyect.git
