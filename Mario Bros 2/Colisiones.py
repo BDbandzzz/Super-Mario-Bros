@@ -13,11 +13,12 @@ def recojer_monedas(personaje):
         personaje.obtener_vida()
         
 def chocar_enemigo(personaje, enemigo, efecto_sonido):
-    if (personaje.rect.bottom <= enemigo.rect.top + 10 and
+    if not enemigo.muerte and (personaje.rect.bottom <= enemigo.rect.top + 10 and
         personaje.rect.right > enemigo.rect.left and 
         personaje.rect.left < enemigo.rect.right):
         # Pisa al enemigo
         personaje.activar_salto_goomba = True
+        enemigo.tiempo_muerte = pygame.time.get_ticks()
         personaje.saltar(velocidad_inicial=6)
         enemigo.muerte = True
     else:
@@ -25,7 +26,8 @@ def chocar_enemigo(personaje, enemigo, efecto_sonido):
             personaje.rect.left < enemigo.rect.right and
             personaje.rect.bottom > enemigo.rect.top and 
             personaje.rect.top < enemigo.rect.bottom):
-            if personaje.estado_personaje == "grande" and not personaje.inmunidad:
+            if (personaje.estado_personaje == "grande" and 
+                not personaje.inmunidad and not enemigo.muerte):
                 personaje.estado_personaje = "pequeño"
                 personaje.actualizar_estados()
                 efecto_sonido.reproducir("Pequeño")
@@ -41,7 +43,7 @@ def hongo_Rojo(personaje,hongo):
     if personaje.estado_personaje == "pequeño":
         personaje.estado_personaje = "grande"
         personaje.actualizar_estados() 
-        hongo.recogido = True
+   
         
 
 def inmunidad(personaje,efecto_sonido):

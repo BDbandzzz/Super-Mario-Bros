@@ -54,7 +54,7 @@ class Goomba(Enemigo):
     
     def animaciones(self,imagenes,inverso):
         now = pygame.time.get_ticks()
-        if now - self.frame_tiempo > self.frame_carga:
+        if not self.muerte and now - self.frame_tiempo > self.frame_carga:
             self.frame_tiempo = now
             self.frame_actual = (self.frame_actual+ 1 ) % self.animaciones_ticks
             self.image = imagenes[self.frame_actual] if self.direccion else inverso[self.frame_actual]
@@ -63,7 +63,7 @@ class Goomba(Enemigo):
         tiempo = pygame.time.get_ticks()
         if self.muerte:
             self.image = image[0]
-            if tiempo - self.tiempo_muerte > 1000:
+            if tiempo - self.tiempo_muerte > 2000:
                 self.kill()
     
     def update(self):

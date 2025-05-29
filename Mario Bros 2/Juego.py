@@ -21,7 +21,12 @@ class Juego:
         self.PANTALLA = pygame.display.set_mode([ANCHURA_PANTALLA, ALTURA_PANTALLA])
         self.FPS = pygame.time.Clock()
         self.background = pygame.image.load(BACKGROUND_IMAGE).convert_alpha()
-        
+        self.background = pygame.transform.scale(
+    self.background,
+    (ANCHURA_PANTALLA, ALTURA_PANTALLA)
+)
+       
+    
         
         
         # Grupos de sprites
@@ -55,6 +60,7 @@ class Juego:
         self.inmunidad_anterior = self.personaje.inmunidad
         self.hongos_recogidos = False
         self.vidas_recogidos = False
+        self.contador = 0
 
 
     def manejar_personaje(self):
@@ -95,7 +101,12 @@ class Juego:
             grupo.update()
 
     def dibujar_en_pantalla(self, fondo, *groups): # Iteramos individualmente y dibujamos en pantalla.
-        self.PANTALLA.blit(fondo, (0, 0))
+        self.PANTALLA.blit(fondo, (0, 0)) #cosas a cambiar: 1 movimiento de pantalla 2: funciones que, segun el movimiento del personaje me permita
+        # cambiar el movimiento en pantalla.))
+        # 
+        
+        # Dentro de pantalla.blit se inicia la superficie, es decir, el fondo de pantalla
+        # La funcion itera de manera indivual y dibuja en la pantalla.
         for group in groups:
             group.draw(self.PANTALLA)
 
@@ -165,30 +176,28 @@ class Juego:
         y = 580
         now = pygame.time.get_ticks()
         if self.vidas_recogidos and (now- self.calcular_hongo_vida_drop) > 9000:
-            nueva_vida = HongoVida("Vida",x,y)
+            nueva_vida = HongoVida("Vida{",x,y)
             self.hongo_vida.add(nueva_vida) 
             self.vidas_recogidos = False
             
     def drop_enemigos(self):
-        
-        x = random.randint(800,1100)  
-        y = 580 
-        xgoomba = random.randint(700,900)  
-        if len(self.all_lista_enemigos) == 0:
-            new_enemy = Koppa("Koppa",x,y)
-            new_goomba = Goomba("Goomba", xgoomba,y)
-            self.all_lista_enemigos.add(new_enemy)
-            self.all_lista_enemigos.add(new_goomba)
-
-
-
+     x = random.randint(800,1100)  
+     y = 580 
+     xgoomba = random.randint(700,900)  
+     if len(self.all_lista_enemigos) == 0:
+                self.contador += 2 
+                new_enemy = Koppa("Koppa",x,y)
+                new_goomba = Goomba("Goomba", xgoomba,y)
+                self.all_lista_enemigos.add(new_enemy)
+                self.all_lista_enemigos.add(new_goomba)
+             
+             
     def detectar_cambio_cancion(self):       
         if self.inmunidad_anterior and not self.personaje.inmunidad:
                 self.sonido_Fondo.reproducir_musica_fondo("DonkeyK")
         self.inmunidad_anterior = self.personaje.inmunidad
         
-    
-    
+
     
     def bucle_principal(self):
         while self.juego_activo:
@@ -207,9 +216,9 @@ class Juego:
                 self.monedas, self.hongos, self.hongo_vida, self.stars
             )
             self.colisiones_enemigos()
-            self.drop_hongos() if len(self.hongos) == 0 and self.hongos_recogidos else None 
+            self.drop_hongos() if self.hongos_recogidos else None 
             self.drop_vidas() 
-            self.drop_enemigos()
+            self.drop_enemigos() if self.contador < 10 else None
             self.colisiones_Hongo()
             self.colisiones_hongoVidas()
             self.colisiones_coins()
@@ -228,4 +237,4 @@ class Juego:
         pygame.quit()
 
 
- 
+
