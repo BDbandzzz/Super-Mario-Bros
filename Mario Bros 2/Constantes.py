@@ -21,7 +21,7 @@ BACKGROUND_IMAGE = os.path.join(ASSETS_PATH,"Font", "Fondo1.png")
 ENEMY_IMAGE = os.path.join(ASSETS_PATH,"SpritesEnemigos//Goomba00")
 KOOPA_PATH = os.path.join(ASSETS_PATH,"SpritesEnemigos//Koopa//koopa")
 DEATH_ENEMY = os.path.join(ASSETS_PATH,"SpritesEnemigos//death")
-DEATH_KOOPA = os.path.join(ASSETS_PATH,"SpritesEnemigos//death")
+DEATH_KOOPA = os.path.join(ASSETS_PATH,"SpritesEnemigos//Koopa//death")
 
 # Imagenes del personaje inicial
 PLAYER_IMAGE = os.path.join(ASSETS_PATH,"SpritesMario//basePequeno//mario")

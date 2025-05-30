@@ -102,11 +102,9 @@ class Juego:
 
     def dibujar_en_pantalla(self, fondo, *groups): # Iteramos individualmente y dibujamos en pantalla.
         self.PANTALLA.blit(fondo, (0, 0)) #cosas a cambiar: 1 movimiento de pantalla 2: funciones que, segun el movimiento del personaje me permita
-        # cambiar el movimiento en pantalla.))
-        # 
-        
+        # cambiar el movimiento en pantalla.))w
         # Dentro de pantalla.blit se inicia la superficie, es decir, el fondo de pantalla
-        # La funcion itera de manera indivual y dibuja en la pantalla.
+        # La funcion itera y dibuja en la pantalla.
         for group in groups:
             group.draw(self.PANTALLA)
 
@@ -190,6 +188,14 @@ class Juego:
                 new_goomba = Goomba("Goomba", xgoomba,y)
                 self.all_lista_enemigos.add(new_enemy)
                 self.all_lista_enemigos.add(new_goomba)
+                
+    def drop_coins(self):
+     x = random.randint(0,1000)  
+     y = random.randint(320,580)
+     if len(self.monedas) < 9:
+        coin = Bonus("MONEDAS",x,y)
+        self.monedas.add(coin)
+             
              
              
     def detectar_cambio_cancion(self):       
@@ -219,11 +225,19 @@ class Juego:
             self.drop_hongos() if self.hongos_recogidos else None 
             self.drop_vidas() 
             self.drop_enemigos() if self.contador < 10 else None
+            self.drop_coins()
             self.colisiones_Hongo()
             self.colisiones_hongoVidas()
             self.colisiones_coins()
             self.colisiones_estrella()
-            self.detectar_cambio_cancion()            
+            self.detectar_cambio_cancion()
+            
+            
+            
+            
+            
+            
+            
             self.generar_texto(f"vidas: {self.personaje.vida}", f" coins: {self.personaje.coin}")
             
             if self.personaje.game_over:

@@ -3,7 +3,7 @@ from Poderes import Bonus, Hongo,HongoVida
 from Enemigos import Goomba
 import pygame
 
-tiempo_inmunidad_base = pygame.time.get_ticks()
+
 
 def recojer_monedas(personaje):
      personaje.contador += 1
@@ -16,6 +16,7 @@ def chocar_enemigo(personaje, enemigo, efecto_sonido):
     if not enemigo.muerte and (personaje.rect.bottom <= enemigo.rect.top + 10 and
         personaje.rect.right > enemigo.rect.left and 
         personaje.rect.left < enemigo.rect.right):
+        
         # Pisa al enemigo
         personaje.activar_salto_goomba = True
         enemigo.tiempo_muerte = pygame.time.get_ticks()
@@ -26,6 +27,7 @@ def chocar_enemigo(personaje, enemigo, efecto_sonido):
             personaje.rect.left < enemigo.rect.right and
             personaje.rect.bottom > enemigo.rect.top and 
             personaje.rect.top < enemigo.rect.bottom):
+            
             if (personaje.estado_personaje == "grande" and 
                 not personaje.inmunidad and not enemigo.muerte):
                 personaje.estado_personaje = "pequeño"
