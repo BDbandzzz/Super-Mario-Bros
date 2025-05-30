@@ -43,7 +43,7 @@ class Juego:
         cargar_elementos(1, "HongoVida", HongoVida, self.hongo_vida, 600, 580)
         cargar_elementos(1, "Goomba", Goomba, self.all_lista_enemigos, X=1000, Y=580)
         cargar_elementos(1, "estrella", Estrella, self.stars, X=800, Y=580)
-        cargar_elementos(1, "koopa",Koppa,self.all_lista_enemigos,X=700,Y=580)
+        cargar_elementos(1, "koopa",Koppa,self.all_lista_enemigos,X=700,Y=0)
 
         # Instanciamos el personaje principal.    
         self.personaje = Mario("Mario", posicionX=0, posicionY=580)
@@ -179,12 +179,14 @@ class Juego:
             self.vidas_recogidos = False
             
     def drop_enemigos(self):
-     x = random.randint(800,1100)  
+     xkoopa = random.choice([0,1220])
      y = 580 
-     xgoomba = random.randint(700,900)  
+     
+     ykoopa = 0
+     xgoomba = random.randint(700,900)       
      if len(self.all_lista_enemigos) == 0:
                 self.contador += 2 
-                new_enemy = Koppa("Koppa",x,y)
+                new_enemy = Koppa("Koppa",xkoopa,ykoopa)
                 new_goomba = Goomba("Goomba", xgoomba,y)
                 self.all_lista_enemigos.add(new_enemy)
                 self.all_lista_enemigos.add(new_goomba)

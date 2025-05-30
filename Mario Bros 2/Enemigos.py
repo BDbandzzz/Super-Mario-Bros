@@ -11,11 +11,14 @@ class Enemigo(pygame.sprite.Sprite):
         self.posicionX = posicionX 
         self.posicionY = posicionY
         self.vida = vida
-      
+        self.gravedad = 4
+        self.limite_suelo = 580
     def mover(self, dx=0, dy=0):
         self.rect.x += dx
         self.rect.y += dy
-
+        
+   
+        
         
 class Goomba(Enemigo):
     def __init__(self, nombre, posicionX, posicionY, vida=1):
@@ -81,10 +84,21 @@ class Koppa(Goomba):
         self.rect.y = posicionY
         self.inverso = voltear_sprites(self.sprites_koopa)
         
+    def caer(self):
+        if self.rect.y < self.limite_suelo:
+            if self.rect.x == 0:
+                self.direccion = False
+                self.movimiento *=-1
+            self.mover(dy=+self.gravedad)
+        
+         
     
     def update(self):
-        self.movimiento_enemigo() if not self.muerte else self.morir(self.death_koopa)
-        self.animaciones(self.sprites_koopa,self.inverso) 
+        self.caer()
+        self.animaciones(self.sprites_koopa,self.inverso)
+        if self.rect.y == self.limite_suelo:
+            self.movimiento_enemigo() if not self.muerte else self.morir(self.death_koopa)
+             
     
             
 

@@ -140,7 +140,7 @@ class Mario(Personaje):
         self.esta_quieto = True
         self.agacharse() if self.agachado else self.voltear_base()
         
-    def saltar(self, velocidad_inicial=-12):
+    def saltar(self, velocidad_inicial=-15):
         if not self.esta_saltando:
             self.esta_saltando = True
             self.esta_quieto = False
