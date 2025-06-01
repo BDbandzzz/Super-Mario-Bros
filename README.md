@@ -1,6 +1,5 @@
 
-# ***<p style="text-align:center;">Super Mario Bros Demo
-</p>***
+# ***<p style="text-align:center;">Super Mario Bros Demo </p>***
 
 
 ## Descripción del Proyecto
