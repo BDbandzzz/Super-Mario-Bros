@@ -219,8 +219,18 @@ class Juego:
                 self.sonido_Fondo.reproducir_musica_fondo("DonkeyK")
         self.inmunidad_anterior = self.personaje.inmunidad
         
-
+    def menu_pausa(self): # A mejorar 
+        capa_trasnparencia = pygame.Surface((ANCHURA_PANTALLA,ALTURA_PANTALLA),pygame.SRCALPHA)
+        capa_trasnparencia.fill((0, 0, 0, 120)) 
         
+        texto_pausa = self.fuente.render("Presione P para volver", False, WHITE)
+        posicon_texto = texto_pausa.get_rect(center=(ANCHURA_PANTALLA/2, ALTURA_PANTALLA/2))
+        
+        self.PANTALLA.blit(capa_trasnparencia,(0,0))
+        self.PANTALLA.blit(texto_pausa, posicon_texto)
+              
+    def game_over():
+        pass
 
     
     def bucle_principal(self):
@@ -235,9 +245,6 @@ class Juego:
                                 pygame.mixer.music.pause()
                         else:
                             pygame.mixer.music.unpause()
-                        
-
-
             
             self.dibujar_en_pantalla(
                 self.background,
@@ -265,9 +272,7 @@ class Juego:
                                    f"{self.personaje.coin}",
                                    f"{self.personaje.puntos}")
             else:
-                texto_pausa = self.fuente.render("Juego en pausa: Presione P para volver", True, (149, 165, 166 ))
-                posicon_texto = texto_pausa.get_rect(center=(ANCHURA_PANTALLA/2, ALTURA_PANTALLA/2))
-                self.PANTALLA.blit(texto_pausa, posicon_texto)
+                self.menu_pausa()
               
 
             if self.personaje.game_over:

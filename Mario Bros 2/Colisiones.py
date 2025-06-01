@@ -21,8 +21,9 @@ def chocar_enemigo(personaje, enemigo, efecto_sonido):
         personaje.activar_salto_goomba = True
         enemigo.tiempo_muerte = pygame.time.get_ticks()
         personaje.saltar(velocidad_inicial=6)
-        personaje.puntos += 100
+        personaje.puntos += 600
         enemigo.muerte = True
+    
     else:
         if (personaje.rect.right > enemigo.rect.left and 
             personaje.rect.left < enemigo.rect.right and
