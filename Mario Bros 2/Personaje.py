@@ -4,7 +4,7 @@ from Constantes import *
 from Funciones import cargar_sprites,voltear_sprites
 from Sonidos import SoundEfects
 
-
+pygame.mixer.init()
 class Personaje(pygame.sprite.Sprite):
     def __init__(self,nombre, posicionX, posicionY, estado="vivo", vida=3,coin=0,contador= 0):
         super().__init__()
@@ -17,6 +17,7 @@ class Personaje(pygame.sprite.Sprite):
         self.coin = coin
         self.contador = contador 
         self.game_over = False
+       
      
     #Se añade una funcion para mover el personaje y se la asigna un limite
     # maximo para no sobrepasar los limites del suelo y la pantalla 
@@ -45,8 +46,8 @@ class Mario(Personaje):
         self.daño = False
         # Funciones para calcular el tiempo
         self.frame_tiempo = pygame.time.get_ticks()
-        self.inmunidad_time = pygame.time.get_ticks()
         self.daño_inmunidad = pygame.time.get_ticks()
+        self.inmunidad_time = pygame.time.get_ticks()
         
                 
         # Se cargan las imagenes para realizar animaciones.
@@ -90,6 +91,7 @@ class Mario(Personaje):
         # Contador 
         self.resetear_contador = False
         self.contador = 0
+        self.puntos = 0
         
     def actualizar_estados(self):
         sprites = self.sprites_mario[self.estado_personaje]
@@ -149,7 +151,7 @@ class Mario(Personaje):
             
         elif self.activar_salto_goomba:
             velocidad_inicial = -5
-            self.sonidos.reproducir("Antonio")
+            self.sonidos.reproducir("KillGoomba")
             self.altura_salto = velocidad_inicial
             self.esta_saltando = True
             self.esta_quieto = False

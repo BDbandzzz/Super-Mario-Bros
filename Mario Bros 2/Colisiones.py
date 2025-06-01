@@ -21,6 +21,7 @@ def chocar_enemigo(personaje, enemigo, efecto_sonido):
         personaje.activar_salto_goomba = True
         enemigo.tiempo_muerte = pygame.time.get_ticks()
         personaje.saltar(velocidad_inicial=6)
+        personaje.puntos += 100
         enemigo.muerte = True
     else:
         if (personaje.rect.right > enemigo.rect.left and 
@@ -48,6 +49,9 @@ def hongo_Rojo(personaje,hongo):
    
         
 
-def inmunidad(personaje,efecto_sonido):
-    personaje.inmunidad = True
-    efecto_sonido.reproducir_musica_fondo("Estrella",loop=False)
+def inmunidad(personaje, efecto_sonido):
+    if not personaje.inmunidad:
+        personaje.inmunidad = True
+        personaje.inmunidad_time = pygame.time.get_ticks()
+        efecto_sonido.reproducir_musica_fondo("Estrella", loop=False)
+       

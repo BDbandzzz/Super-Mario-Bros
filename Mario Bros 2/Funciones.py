@@ -2,7 +2,7 @@ from Constantes import *
 import pygame
 import random
 
-def cargar_sprites(cantidad, path,del_fondo, escala=None,div = None):
+def cargar_sprites(cantidad, path,del_fondo,escala=None,div=None):
     imagenes = []
     for i in range(cantidad):
         ruta = f"{path}{i}.png"

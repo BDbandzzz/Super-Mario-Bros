@@ -42,10 +42,12 @@ HONGO_VIDA_PATH = os.path.join(ASSETS_PATH,"SpritesPowers//hongoVida//hongo")
 ESTRELLA_PATH = os.path.join(ASSETS_PATH,"SpritesPowers//estrella//estrella")
 
 
+
 #Acceso a los efectos de sonido 
 SOUND_PATH = os.path.join(ASSETS_PATH,"soundEfect")
 
-
-
 # Acceso a la fuente de letra 
 FONT_PATH = os.path.join(ASSETS_PATH,"Letra//SMW.ttf")
+
+#Acceso a las imagenes de la lista de stats 
+STATS_PATH = os.path.join(ASSETS_PATH,"statsList//stats")

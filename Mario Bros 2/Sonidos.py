@@ -10,6 +10,7 @@ class SoundEfects():
                         "Vida":    pygame.mixer.Sound("Assets//soundEfect//Up.wav"),
                         "Hongo":   pygame.mixer.Sound("Assets//soundEfect//powerup.wav"),
                         "Pequeño": pygame.mixer.Sound("Assets//soundEfect//pequeño.wav"),
+                    "KillGoomba":  pygame.mixer.Sound("Assets//soundEfect//Kick.wav")
      
         }
     def reproducir(self, nombre):

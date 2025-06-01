@@ -12,18 +12,16 @@ class Poderes(pygame.sprite.Sprite):
         self.posicionY = posicionY
         
         self.contador = 0
-        self.direccion = -1
+        self.rebote = -1
         
     # Atributos para animar:     
         self.frame_actual = 0
         self.frame_tiempo = pygame.time.get_ticks()
       
-    def mover(self,dx=0,dy=0):
+    def mover(self,dx=0,dy=0): 
         self.rect.x += dx
         self.rect.y += dy
-        self.rect.x = max(0, min(self.rect.x,  ANCHURA_PANTALLA- self.rect.width))
-        self.rect.y = max(0, min(self.rect.y, (ALTURA_PANTALLA-82) - self.rect.height))
-        
+       
     
     def animacion(self,lista,framerate,fotogramas):
         now = pygame.time.get_ticks()
@@ -33,12 +31,16 @@ class Poderes(pygame.sprite.Sprite):
             self.image = lista[self.frame_actual]
     
     def movimiento_automatico(self):
-        mover = self.direccion * 3
+        
+        mover = self.rebote * 3
         self.mover(dx=mover)
+        
         if self.rect.x <= 0:
-         self.direccion *=-1 
-
-        # Cargar sprites al crear el objeto    
+         self.rebote *= -1 
+        elif self.rect.x >= ANCHURA_PANTALLA-40:
+           self.rebote *= -1
+           
+        # Cargar sprites l crear el objeto    
   
 class Bonus(Poderes):
     def __init__(self, nombre, posicionX, posicionY):
@@ -67,8 +69,9 @@ class Hongo(Poderes):
         self.tiempo_recogido = pygame.time.get_ticks()
          
     def update(self):
-        self.animacion(self.hongo,400,2)     
         self.movimiento_automatico()
+        self.animacion(self.hongo,400,2)     
+        
 
 
 class HongoVida(Poderes):
@@ -82,8 +85,9 @@ class HongoVida(Poderes):
       
             
     def update(self):
+        self.movimiento_automatico()   
         self.animacion(self.hongoVida,200,2) 
-        self.movimiento_automatico()    
+      
     
 
 
@@ -99,17 +103,8 @@ class Estrella(Poderes):
         self.esta_saltando = False
         self.gravedad = 0.5
         self.altura_salto = 0
-        self.direccion =-1
-        
-        
-    def mover_estrella(self):
-        mover_estrella = self.direccion * 3
-        self.mover(dx=mover_estrella)
-        if self.rect.x <= 0:
-            self.direccion *=-1
-            
-                
     
+
     def salto(self,velocidad_inicial =-10):
         if not self.esta_saltando:
             self.altura_salto = velocidad_inicial
@@ -120,7 +115,6 @@ class Estrella(Poderes):
             self.altura_salto += self.gravedad
             self.mover(dy=self.altura_salto)
             limite_piso = (ALTURA_PANTALLA-82) - self.rect.height
-            
             if self.rect.y >= limite_piso:
                 self.rect.y = limite_piso
                 self.esta_saltando = False   
@@ -128,11 +122,12 @@ class Estrella(Poderes):
         
     def update(self):
         self.animacion(self.estrella,200,4)    
+        self.movimiento_automatico()
         if not self.esta_saltando:
             self.salto()
         else:
             self.caer()
-        self.mover_estrella()
+     
         
 
 

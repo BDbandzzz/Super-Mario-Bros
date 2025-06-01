@@ -17,7 +17,7 @@ class Enemigo(pygame.sprite.Sprite):
         self.rect.x += dx
         self.rect.y += dy
         
-   
+
         
         
 class Goomba(Enemigo):

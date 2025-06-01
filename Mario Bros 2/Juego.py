@@ -8,7 +8,7 @@ from Constantes import *
 from Personaje  import Mario
 from Enemigos import Goomba, Koppa
 from Poderes import Bonus, Hongo, HongoVida, Estrella
-from Funciones import cargar_elementos, coins_random
+from Funciones import cargar_elementos, coins_random,cargar_sprites
 
 class Juego:
     def __init__(self):
@@ -21,10 +21,8 @@ class Juego:
         self.PANTALLA = pygame.display.set_mode([ANCHURA_PANTALLA, ALTURA_PANTALLA])
         self.FPS = pygame.time.Clock()
         self.background = pygame.image.load(BACKGROUND_IMAGE).convert_alpha()
-        self.background = pygame.transform.scale(
-    self.background,
-    (ANCHURA_PANTALLA, ALTURA_PANTALLA)
-)
+        self.fuente= pygame.font.Font(FONT_PATH, 50)
+     
        
     
         
@@ -43,7 +41,7 @@ class Juego:
         cargar_elementos(1, "HongoVida", HongoVida, self.hongo_vida, 600, 580)
         cargar_elementos(1, "Goomba", Goomba, self.all_lista_enemigos, X=1000, Y=580)
         cargar_elementos(1, "estrella", Estrella, self.stars, X=800, Y=580)
-        cargar_elementos(1, "koopa",Koppa,self.all_lista_enemigos,X=700,Y=0)
+        cargar_elementos(1, "koopa",Koppa,self.all_lista_enemigos,X=1220,Y=0)
 
         # Instanciamos el personaje principal.    
         self.personaje = Mario("Mario", posicionX=0, posicionY=580)
@@ -55,6 +53,9 @@ class Juego:
         self.sonido_Fondo = SoundEfects()
         self.sonido_Fondo.reproducir_musica_fondo(nombre="DonkeyK")
         self.juego_activo = True
+        self.juego_pausado = False
+        
+        self.stats_images = cargar_sprites(2,STATS_PATH,False,escala=3)
         
         # Estados para imunidad y hongos recogidos 
         self.inmunidad_anterior = self.personaje.inmunidad
@@ -151,12 +152,24 @@ class Juego:
                     inmunidad(self.personaje,self.sonido_Fondo)
 
     def generar_texto(self, *groups):
-        fuente= pygame.font.Font(FONT_PATH, 60)
-        x = 250
+        x_texto= 200 
+        x_image = 200
+        
+        
+        y = 20
+
         for texto in groups:
-            superficie = fuente.render(f"{texto}: ", True, WHITE)
-            self.PANTALLA.blit(superficie, (x, 40))
-            x += 600
+            superficie = self.fuente.render(f"x {texto}", True, WHITE)
+            self.PANTALLA.blit(superficie, (x_texto, 20))
+           
+            x_texto += 400
+           
+        for i in range(2):
+            self.PANTALLA.blit(self.stats_images[i],(x_image-120,y))  
+            x_image += 400
+            y -=20 
+    
+            
     
     def drop_hongos(self):
         x = random.randint(400,1000)
@@ -184,12 +197,14 @@ class Juego:
      
      ykoopa = 0
      xgoomba = random.randint(700,900)       
+     
      if len(self.all_lista_enemigos) == 0:
                 self.contador += 2 
                 new_enemy = Koppa("Koppa",xkoopa,ykoopa)
                 new_goomba = Goomba("Goomba", xgoomba,y)
                 self.all_lista_enemigos.add(new_enemy)
                 self.all_lista_enemigos.add(new_goomba)
+                
                 
     def drop_coins(self):
      x = random.randint(0,1000)  
@@ -199,54 +214,65 @@ class Juego:
         self.monedas.add(coin)
              
              
-             
     def detectar_cambio_cancion(self):       
         if self.inmunidad_anterior and not self.personaje.inmunidad:
                 self.sonido_Fondo.reproducir_musica_fondo("DonkeyK")
         self.inmunidad_anterior = self.personaje.inmunidad
         
 
+        
+
     
     def bucle_principal(self):
         while self.juego_activo:
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
+                if event.type == pygame.QUIT: 
                     self.juego_activo = False
-            self.manejar_personaje()
-            self.actualizar_sprites(
-                self.all_lista_enemigos,
-                self.all_lista_sprites, self.monedas, self.stars,
-                self.hongos, self.hongo_vida
-            )
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_p:
+                        self.juego_pausado = not self.juego_pausado
+                        if self.juego_pausado:
+                                pygame.mixer.music.pause()
+                        else:
+                            pygame.mixer.music.unpause()
+                        
+
+
+            
             self.dibujar_en_pantalla(
                 self.background,
                 self.all_lista_enemigos, self.all_lista_sprites,
                 self.monedas, self.hongos, self.hongo_vida, self.stars
             )
-            self.colisiones_enemigos()
-            self.drop_hongos() if self.hongos_recogidos else None 
-            self.drop_vidas() 
-            self.drop_enemigos() if self.contador < 10 else None
-            self.drop_coins()
-            self.colisiones_Hongo()
-            self.colisiones_hongoVidas()
-            self.colisiones_coins()
-            self.colisiones_estrella()
-            self.detectar_cambio_cancion()
-            
-            
-            
-            
-            
-            
-            
-            self.generar_texto(f"vidas: {self.personaje.vida}", f" coins: {self.personaje.coin}")
-            
+
+            if not self.juego_pausado:
+                self.manejar_personaje()
+                self.actualizar_sprites(
+                    self.all_lista_enemigos,
+                    self.all_lista_sprites, self.monedas, self.stars,
+                    self.hongos, self.hongo_vida)
+                
+                self.colisiones_enemigos()
+                self.drop_hongos() if self.hongos_recogidos else None 
+                self.drop_vidas() 
+                self.drop_enemigos() if self.contador < 10 else None
+                self.colisiones_Hongo()
+                self.colisiones_hongoVidas()
+                self.colisiones_coins()
+                self.colisiones_estrella()
+                self.detectar_cambio_cancion()
+                self.generar_texto(f"{self.personaje.vida}", 
+                                   f"{self.personaje.coin}",
+                                   f"{self.personaje.puntos}")
+            else:
+                texto_pausa = self.fuente.render("Juego en pausa: Presione P para volver", True, (149, 165, 166 ))
+                posicon_texto = texto_pausa.get_rect(center=(ANCHURA_PANTALLA/2, ALTURA_PANTALLA/2))
+                self.PANTALLA.blit(texto_pausa, posicon_texto)
+              
+
             if self.personaje.game_over:
                 self.juego_activo = False
-             
-            
-            
+
             pygame.display.flip()
             self.FPS.tick(60)
 
