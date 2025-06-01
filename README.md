@@ -1,5 +1,6 @@
 
-***<h1 style="text-align:center;">Super Mario Bros </h1>***
+# ***<p style="text-align:center;">Super Mario Bros Demo
+</p>***
 
 
 ## Descripción del Proyecto
@@ -43,8 +44,9 @@ python app.pyw
 
 ## Upgrades
 ---
-- Opcion para inicio y boton de pausa
-- Nuevo stats: Puntos 
+- Menu de inicio y boton de pausa
+- **Nueva stats list:** Incluye imagenes de la cantidad de items
+- **Nuevo stat:** El personaje puede obtener puntos por cada accion beneficiosa
 
-- ![Captura de pantalla 2025-06-01 165659](https://github.com/user-attachments/assets/97981895-2d17-4f05-a170-e1458d9fd3d3)
+  ![Captura de pantalla 2025-06-01 165659](https://github.com/user-attachments/assets/97981895-2d17-4f05-a170-e1458d9fd3d3)
 
