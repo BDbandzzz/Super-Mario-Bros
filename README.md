@@ -24,7 +24,7 @@ Este videojuego utiliza la librería `pygame` para gestionar gráficos, sonido y
 Pasos para probar el proyecto: 
 ```bash
 pip install pygame
-git clone https://github.com/TonySny/finalproyect.git
+git clone https://github.com/BDbandzzz/Super-Mario-Bros.git
 cd "Mario Bros 2"
 python app.pyw
 ```
