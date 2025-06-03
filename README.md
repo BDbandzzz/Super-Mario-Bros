@@ -28,6 +28,7 @@ git clone https://github.com/BDbandzzz/Super-Mario-Bros.git
 cd "Mario Bros 2"
 python app.pyw
 ```
+- O una vez clonado el repositorio puedes ir a la carpeta y dar click al archivo app.pyw 
 
 ## Controles 🎮
 
