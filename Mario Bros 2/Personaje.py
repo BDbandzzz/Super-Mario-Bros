@@ -44,6 +44,8 @@ class Mario(Personaje):
         self.activar_salto_goomba = False  # Detectar colision con el goomba y generar rebote 
         self.inmunidad = False  # Para detectar la inmunidad
         self.daño = False
+        
+        
         # Funciones para calcular el tiempo
         self.frame_tiempo = pygame.time.get_ticks()
         self.daño_inmunidad = pygame.time.get_ticks()
@@ -51,17 +53,24 @@ class Mario(Personaje):
         
                 
         # Se cargan las imagenes para realizar animaciones.
-        self.sprites_mario = { "pequeño": { "saltar": cargar_sprites(1,JUMP_PATH,False,3),
-                                            "caminar": cargar_sprites(3,RUNNING_PATH,False,escala=3),
-                                            "Base": cargar_sprites(1,PLAYER_IMAGE,False,escala=3),
-                                            "Reverso_caminar": voltear_sprites(cargar_sprites(3,RUNNING_PATH,False,escala=3))
-                                            },
-                               "grande": {  "saltar": cargar_sprites(1,JUMP_GRANDE,False,3),
-                                            "caminar": cargar_sprites(3,RUNNING_GRANDE,False,escala=3),
-                                            "Base": cargar_sprites(1,BASE_GRANDE,False,escala=3),
-                                            "Reverso_caminar": voltear_sprites(cargar_sprites(3,RUNNING_GRANDE,False,escala=3)), 
-                                            "Agacharse": cargar_sprites(1,DOWN_GRANDE,False,escala=3)                                        
-                                }            
+        self.sprites_mario = {
+            "pequeño": {
+            "saltar": cargar_sprites(1, JUMP_PATH, False, 3),
+            "caminar": cargar_sprites(3, RUNNING_PATH, False, escala=3),
+            "Base": cargar_sprites(1, PLAYER_IMAGE, False, escala=3),
+            "Reverso_caminar": voltear_sprites(
+                cargar_sprites(3, RUNNING_PATH, False, escala=3)
+            ),
+            },
+            "grande": {
+            "saltar": cargar_sprites(1, JUMP_GRANDE, False, 3),
+            "caminar": cargar_sprites(3, RUNNING_GRANDE, False, escala=3),
+            "Base": cargar_sprites(1, BASE_GRANDE, False, escala=3),
+            "Reverso_caminar": voltear_sprites(
+                cargar_sprites(3, RUNNING_GRANDE, False, escala=3)
+            ),
+            "Agacharse": cargar_sprites(1, DOWN_GRANDE, False, escala=3),
+            },
         }
     # Imagenes iniciales 
         self.estado_personaje = "pequeño"
@@ -71,12 +80,11 @@ class Mario(Personaje):
         self.rect.x = posicionX
         self.rect.y = posicionY
         
-        
-        
         self.actualizar_estados()
-        self.agacharse()
-        
+       
         # Atributos para velocidades, salto y efectos de sonido
+        
+        
         self.altura_salto = 0
         self.gravedad = 0.5
         self.velocidad = 0
@@ -86,7 +94,6 @@ class Mario(Personaje):
        
         # Atributos para animar 
         self.frame_actual = 0
-        self.frame_carga = 40
         self.fotogramas = 3   
         # Contador 
         self.resetear_contador = False
@@ -144,6 +151,7 @@ class Mario(Personaje):
         
     def saltar(self, velocidad_inicial=-15):
         if not self.esta_saltando:
+            
             self.esta_saltando = True
             self.esta_quieto = False
             self.sonidos.reproducir("Salto")
@@ -151,11 +159,13 @@ class Mario(Personaje):
             
         elif self.activar_salto_goomba:
             velocidad_inicial = -5
+            
             self.sonidos.reproducir("KillGoomba")
             self.altura_salto = velocidad_inicial
             self.esta_saltando = True
             self.esta_quieto = False
             self.activar_salto_goomba = False
+        
         self.image = self.jump[0] if self.direccion else self.salto_inverso
            
     def caer(self):
@@ -167,7 +177,7 @@ class Mario(Personaje):
                 self.rect.y = limite_piso
                 self.esta_saltando = False
                 self.altura_salto = 0
-        
+                
                 if not self.running:
                     self.esta_quieto = True
                 

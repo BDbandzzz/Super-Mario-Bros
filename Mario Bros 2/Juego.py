@@ -8,7 +8,7 @@ from Constantes import *
 from Personaje  import Mario
 from Enemigos import Goomba, Koppa
 from Poderes import Bonus, Hongo, HongoVida, Estrella
-from Funciones import cargar_elementos, coins_random,cargar_sprites
+from Funciones import cargar_elementos, coins_random,cargar_sprites,renderizar_texto
 
 class Juego:
     def __init__(self):
@@ -36,7 +36,7 @@ class Juego:
         self.monedas = pygame.sprite.Group()
 
         # Instanciar elementos
-        coins_random(9, "coin", Bonus, self.monedas, X=ANCHURA_PANTALLA-40, Y=320)
+        coins_random(20, "coin", Bonus, self.monedas, X=ANCHURA_PANTALLA-40, Y=320)
         cargar_elementos(1, "Hongo", Hongo, self.hongos, 400, Y=580)
         cargar_elementos(1, "HongoVida", HongoVida, self.hongo_vida, 600, 580)
         cargar_elementos(1, "Goomba", Goomba, self.all_lista_enemigos, X=1000, Y=580)
@@ -54,6 +54,8 @@ class Juego:
         self.sonido_Fondo.reproducir_musica_fondo(nombre="DonkeyK")
         self.juego_activo = True
         self.juego_pausado = False
+        self.menu = True
+        
         
         self.stats_images = cargar_sprites(2,STATS_PATH,False,escala=3)
         
@@ -141,6 +143,7 @@ class Juego:
             for colision in colisiones:
                 if isinstance(colision, HongoVida):
                     self.calcular_hongo_vida_drop = pygame.time.get_ticks()
+                    self.personaje.puntos += 500
                     self.vidas_recogidos = True
                     self.personaje.obtener_vida()
 
@@ -151,11 +154,9 @@ class Juego:
                 if isinstance(colision, Estrella):
                     inmunidad(self.personaje,self.sonido_Fondo)
 
-    def generar_texto(self, *groups):
+    def generar_texto(self, *groups): # Que desastre xdddd 
         x_texto= 200 
         x_image = 200
-        
-        
         y = 20
 
         for texto in groups:
@@ -168,6 +169,7 @@ class Juego:
             self.PANTALLA.blit(self.stats_images[i],(x_image-120,y))  
             x_image += 400
             y -=20 
+            """Desatre."""
     
             
     
@@ -191,6 +193,7 @@ class Juego:
             self.hongo_vida.add(nueva_vida) 
             self.vidas_recogidos = False
             
+    
     def drop_enemigos(self):
      xkoopa = random.choice([0,1220])
      y = 580 
@@ -204,7 +207,7 @@ class Juego:
                 new_goomba = Goomba("Goomba", xgoomba,y)
                 self.all_lista_enemigos.add(new_enemy)
                 self.all_lista_enemigos.add(new_goomba)
-                
+                 
                 
     def drop_coins(self):
      x = random.randint(0,1000)  
@@ -214,24 +217,44 @@ class Juego:
         self.monedas.add(coin)
              
              
+    
     def detectar_cambio_cancion(self):       
         if self.inmunidad_anterior and not self.personaje.inmunidad:
                 self.sonido_Fondo.reproducir_musica_fondo("DonkeyK")
         self.inmunidad_anterior = self.personaje.inmunidad
-        
-    def menu_pausa(self): # A mejorar 
-        capa_trasnparencia = pygame.Surface((ANCHURA_PANTALLA,ALTURA_PANTALLA),pygame.SRCALPHA)
-        capa_trasnparencia.fill((0, 0, 0, 120)) 
-        
-        texto_pausa = self.fuente.render("Presione P para volver", False, WHITE)
-        posicon_texto = texto_pausa.get_rect(center=(ANCHURA_PANTALLA/2, ALTURA_PANTALLA/2))
-        
-        self.PANTALLA.blit(capa_trasnparencia,(0,0))
-        self.PANTALLA.blit(texto_pausa, posicon_texto)
-              
-    def game_over():
-        pass
+    
 
+    def pausar_sonido (self):
+        self.juego_pausado = not self.juego_pausado
+        if self.juego_pausado:
+            pygame.mixer.music.pause()
+        else:
+            pygame.mixer.music.unpause()
+        
+        
+        
+    def menu_inicio(self):
+        pygame.mixer_music.pause() 
+        
+        while self.menu:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT: 
+                    self.menu = False
+                    pygame.quit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        self.menu = False            
+                        
+            renderizar_texto(fuente=self.fuente,
+                         pantalla=self.PANTALLA,
+                        texto="Presione Enter para iniciar",
+                        transparencia= False
+        )
+                
+            pygame.display.flip()
+            self.FPS.tick(60)
+        pygame.mixer_music.unpause()
+                    
     
     def bucle_principal(self):
         while self.juego_activo:
@@ -240,17 +263,18 @@ class Juego:
                     self.juego_activo = False
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_p:
-                        self.juego_pausado = not self.juego_pausado
-                        if self.juego_pausado:
-                                pygame.mixer.music.pause()
-                        else:
-                            pygame.mixer.music.unpause()
-            
-            self.dibujar_en_pantalla(
-                self.background,
-                self.all_lista_enemigos, self.all_lista_sprites,
-                self.monedas, self.hongos, self.hongo_vida, self.stars
-            )
+                        self.pausar_sonido()
+                        
+            if not self.menu:            
+                self.dibujar_en_pantalla(
+                    self.background,
+                    self.all_lista_enemigos, self.all_lista_sprites,
+                    self.monedas, self.hongos, self.hongo_vida, self.stars
+                )
+                
+                self.generar_texto(f"{self.personaje.vida}", 
+                                    f"{self.personaje.coin}",
+                                    f"{self.personaje.puntos}")
 
             if not self.juego_pausado:
                 self.manejar_personaje()
@@ -268,11 +292,15 @@ class Juego:
                 self.colisiones_coins()
                 self.colisiones_estrella()
                 self.detectar_cambio_cancion()
-                self.generar_texto(f"{self.personaje.vida}", 
-                                   f"{self.personaje.coin}",
-                                   f"{self.personaje.puntos}")
+            
             else:
-                self.menu_pausa()
+               renderizar_texto(fuente=self.fuente,
+                         pantalla=self.PANTALLA,
+                        texto="Presione P para volver",
+                        transparencia= True,
+                        alpha= 170   
+        )
+   
               
 
             if self.personaje.game_over:

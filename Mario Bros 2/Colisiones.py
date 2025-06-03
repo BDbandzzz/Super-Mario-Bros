@@ -8,6 +8,7 @@ import pygame
 def recojer_monedas(personaje):
      personaje.contador += 1
      personaje.coin += 1
+     personaje.puntos +=1000
      if personaje.contador == 10:
         personaje.resetear_contador = True
         personaje.obtener_vida()
@@ -46,12 +47,14 @@ def chocar_enemigo(personaje, enemigo, efecto_sonido):
 def hongo_Rojo(personaje,hongo):
     if personaje.estado_personaje == "pequeño":
         personaje.estado_personaje = "grande"
+        personaje.puntos += 100
         personaje.actualizar_estados() 
    
         
 
 def inmunidad(personaje, efecto_sonido):
     if not personaje.inmunidad:
+        personaje.puntos +=300
         personaje.inmunidad = True
         personaje.inmunidad_time = pygame.time.get_ticks()
         efecto_sonido.reproducir_musica_fondo("Estrella", loop=False)
