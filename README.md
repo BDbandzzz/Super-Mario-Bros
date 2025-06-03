@@ -1,15 +1,14 @@
 
-# Super Mario Bros 
+<h1 align="center">Super Mario Bros Demo 🎮 </h1>
 
 
 ## Descripción del Proyecto
 
 Este proyecto es un videojuego desarrollado con **Python** y **Pygame**, diseñado para replicar aspectos fundamentales del juego **Super Mario Bros** original. Diseñado por estudiantes de la **Universidad del Valle Seccional Pacifico** 🔰
 
-
 ---
 
-## Integrantes
+## Integrantes 🫂
 
 - Bryan David Garces Quintero 
 - Jose Antonio Rodriguez.
@@ -17,25 +16,36 @@ Este proyecto es un videojuego desarrollado con **Python** y **Pygame**, diseña
 
 ---
 
-## Descripción 
+## Descripción 📄
 
 Este videojuego utiliza la librería `pygame` para gestionar gráficos, sonido y entradas del teclado. Estructurado en el paradigma **Programacion orientada a objetos** para manejar el jugador, enemigos, colisiones y  la lógica del juego.
 
 
 Pasos para probar el proyecto: 
 ```bash
--pip install pygame
-- git clone https://github.com/TonySny/finalproyect.git
-- cd "Mario Bros 2"
-- python app.py
+pip install pygame
+git clone https://github.com/BDbandzzz/Super-Mario-Bros.git
+cd "Mario Bros 2"
+python app.pyw
 ```
 
-## Controles 
+## Controles 🎮
 
 - Flechas o WASD para moverse
 - C o Espacio para saltar
-- X o RSHITF para correr 
+- X o RSHITF para correr
+- P para Pausar 
 
 
-## Preview 
+- <h1 align="center"> Preview 📺 </h1>
+---
 ![Captura de pantalla 2025-05-28 005055](https://github.com/user-attachments/assets/ecac864a-83ca-4be9-8ee6-6a0e19ad4eca)
+
+## <h1 align="center"> Upgrades 🔄️ </h1>
+---
+- Menu de inicio y boton de pausa
+- **Nueva stats list:** Incluye imagenes de la cantidad de items
+- **Nuevo stat:** El personaje puede obtener puntos por cada accion beneficiosa
+
+  ![Captura de pantalla 2025-06-01 165659](https://github.com/user-attachments/assets/97981895-2d17-4f05-a170-e1458d9fd3d3)
+
