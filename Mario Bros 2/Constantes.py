@@ -18,28 +18,30 @@ ALTURA_PANTALLA = 720
 
 #Acceso a las imagenes
 BACKGROUND_IMAGE = os.path.join(ASSETS_PATH,"Font", "Fondo1.png")
-ENEMY_IMAGE = os.path.join(ASSETS_PATH,"SpritesEnemigos//Goomba00")
-KOOPA_PATH = os.path.join(ASSETS_PATH,"SpritesEnemigos//Koopa//koopa")
-DEATH_ENEMY = os.path.join(ASSETS_PATH,"SpritesEnemigos//death")
-DEATH_KOOPA = os.path.join(ASSETS_PATH,"SpritesEnemigos//Koopa//death")
+PARALAX_IMAGES   = os.path.join(ASSETS_PATH,"Font//font")
+GROUND_IMAGE     = os.path.join(ASSETS_PATH,"Font//ground.png")
+ENEMY_IMAGE      = os.path.join(ASSETS_PATH,"SpritesEnemigos//Goomba00")
+KOOPA_PATH       = os.path.join(ASSETS_PATH,"SpritesEnemigos//Koopa//koopa")
+DEATH_ENEMY      = os.path.join(ASSETS_PATH,"SpritesEnemigos//death")
+DEATH_KOOPA      = os.path.join(ASSETS_PATH,"SpritesEnemigos//Koopa//death")
 
 # Imagenes del personaje inicial
 PLAYER_IMAGE = os.path.join(ASSETS_PATH,"SpritesMario//basePequeno//mario")
-JUMP_PATH = os.path.join(ASSETS_PATH,"SpritesMario//saltoPequeno//mario")
+JUMP_PATH    = os.path.join(ASSETS_PATH,"SpritesMario//saltoPequeno//mario")
 RUNNING_PATH = os.path.join(ASSETS_PATH,"SpritesMario//caminarPequeno//mario")
-DEATH_PATH = os.path.join(ASSETS_PATH,"SpritesMario//morir//mario")
+DEATH_PATH   = os.path.join(ASSETS_PATH,"SpritesMario//morir//mario")
 
 # Imagenes para mario grande 
-BASE_GRANDE = os.path.join(ASSETS_PATH,"SpritesMario//baseGrande//mario")
+BASE_GRANDE    = os.path.join(ASSETS_PATH,"SpritesMario//baseGrande//mario")
 RUNNING_GRANDE = os.path.join(ASSETS_PATH,"SpritesMario//caminarGrande//mario")
-JUMP_GRANDE = os.path.join(ASSETS_PATH,"SpritesMario//saltoGrande//mario")
-DOWN_GRANDE = os.path.join(ASSETS_PATH,"SpritesMario//agacharseGrande//mario")
+JUMP_GRANDE    = os.path.join(ASSETS_PATH,"SpritesMario//saltoGrande//mario")
+DOWN_GRANDE    = os.path.join(ASSETS_PATH,"SpritesMario//agacharseGrande//mario")
 
 # Imagenes para los poderes y bonus:
-COIN_PATH = os.path.join(ASSETS_PATH,"SpritesPowers//Coins//coins")
-HONGO_PATH = os.path.join(ASSETS_PATH,"SpritesPowers//hongoRojo//hongo")
 HONGO_VIDA_PATH = os.path.join(ASSETS_PATH,"SpritesPowers//hongoVida//hongo")
-ESTRELLA_PATH = os.path.join(ASSETS_PATH,"SpritesPowers//estrella//estrella")
+COIN_PATH       = os.path.join(ASSETS_PATH,"SpritesPowers//Coins//coins")
+HONGO_PATH      = os.path.join(ASSETS_PATH,"SpritesPowers//hongoRojo//hongo")
+ESTRELLA_PATH   = os.path.join(ASSETS_PATH,"SpritesPowers//estrella//estrella")
 
 
 
@@ -47,7 +49,10 @@ ESTRELLA_PATH = os.path.join(ASSETS_PATH,"SpritesPowers//estrella//estrella")
 SOUND_PATH = os.path.join(ASSETS_PATH,"soundEfect")
 
 # Acceso a la fuente de letra 
-FONT_PATH = os.path.join(ASSETS_PATH,"Letra//SMW.ttf")
+FONT_PATH  = os.path.join(ASSETS_PATH,"Letra//SMW.ttf")
 
 #Acceso a las imagenes de la lista de stats 
 STATS_PATH = os.path.join(ASSETS_PATH,"statsList//stats")
+
+
+WALL_PATH = os.path.join(ASSETS_PATH,"wall//wall.png")

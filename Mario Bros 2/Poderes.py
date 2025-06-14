@@ -19,6 +19,7 @@ class Poderes(pygame.sprite.Sprite):
         self.frame_tiempo = pygame.time.get_ticks()
       
     def mover(self,dx=0,dy=0): 
+        
         self.rect.x += dx
         self.rect.y += dy
        
@@ -31,7 +32,6 @@ class Poderes(pygame.sprite.Sprite):
             self.image = lista[self.frame_actual]
     
     def movimiento_automatico(self):
-        
         mover = self.rebote * 3
         self.mover(dx=mover)
         
@@ -39,7 +39,6 @@ class Poderes(pygame.sprite.Sprite):
          self.rebote *= -1 
         elif self.rect.x >= ANCHURA_PANTALLA-40:
            self.rebote *= -1
-           
         # Cargar sprites l crear el objeto    
   
 class Bonus(Poderes):
@@ -123,6 +122,7 @@ class Estrella(Poderes):
     def update(self):
         self.animacion(self.estrella,200,4)    
         self.movimiento_automatico()
+        
         if not self.esta_saltando:
             self.salto()
         else:

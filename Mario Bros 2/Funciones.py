@@ -26,12 +26,11 @@ def cargar_sprites(cantidad, path,del_fondo,escala=None,div=None):
                 ancho = int(image.get_width() // div)
                 alto = int(image.get_height() // div)
                 image = pygame.transform.scale(image, (ancho, alto))
-            if del_fondo:
-                image.set_colorkey(BLACK)  # Color negro como transparente
+            
+
             imagenes.append(image)
         except Exception as e:
             print(f" Error en el archivo {ruta}: {e}")
-    
     return imagenes
 
 """Solo voltea las imagenes a la izquierda, retorna una lista
@@ -44,7 +43,7 @@ def voltear_sprites(imagenes):
 
 """ Me permite instanciar los elementos y agregarlos a la lista de sprites"""
 def cargar_elementos(cantidad,nombre,clase,lista,X,Y):
-        for i in range (cantidad):
+        for i in range(cantidad):
             nombre = clase(nombre=f"{nombre}",posicionX= X, posicionY= Y)
             lista.add(nombre)  
 
@@ -56,11 +55,9 @@ def coins_random(cantidad,nombre,clase,lista,X,Y):
             nombre = clase(nombre=f"{nombre}",
                            posicionX= random.randint(20,X),
                            posicionY= random.randint(Y,580))
-            
             lista.add(nombre)
-      
-      
-      
+        return lista
+
       
 """ Funcion para renderizar el texto en pantalla, 
 segun los parametros y la cantidad de transparencia

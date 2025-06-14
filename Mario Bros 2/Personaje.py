@@ -9,6 +9,7 @@ class Personaje(pygame.sprite.Sprite):
     def __init__(self,nombre, posicionX, posicionY, estado="vivo", vida=3,coin=0,contador= 0):
         super().__init__()
         
+        #Atributos principales del Personaje
         self.nombre = nombre
         self.posicionX = posicionX
         self.posicionY = posicionY
@@ -17,6 +18,13 @@ class Personaje(pygame.sprite.Sprite):
         self.coin = coin
         self.contador = contador 
         self.game_over = False
+    
+        # Contador 
+        self.resetear_contador = False
+        self.contador = 0
+        self.puntos = 0
+       
+       
        
      
     #Se añade una funcion para mover el personaje y se la asigna un limite
@@ -40,10 +48,10 @@ class Mario(Personaje):
         self.running = False # Evalua si  esta caminando
         self.walking = False # Evaluar si esta corriendo
         self.esta_quieto = True  # Controla y evalua si el personaje esta moviendose o no
-        self.agachado = False   # Detectar si el personaje esta agachado o no
+        self.esta_agachado = False   # Detectar si el personaje esta agachado o no
         self.activar_salto_goomba = False  # Detectar colision con el goomba y generar rebote 
         self.inmunidad = False  # Para detectar la inmunidad
-        self.daño = False
+        self.inmunidad_por_daño = False
         
         
         # Funciones para calcular el tiempo
@@ -83,8 +91,6 @@ class Mario(Personaje):
         self.actualizar_estados()
        
         # Atributos para velocidades, salto y efectos de sonido
-        
-        
         self.altura_salto = 0
         self.gravedad = 0.5
         self.velocidad = 0
@@ -95,10 +101,8 @@ class Mario(Personaje):
         # Atributos para animar 
         self.frame_actual = 0
         self.fotogramas = 3   
-        # Contador 
-        self.resetear_contador = False
-        self.contador = 0
-        self.puntos = 0
+        
+  
         
     def actualizar_estados(self):
         sprites = self.sprites_mario[self.estado_personaje]
@@ -107,6 +111,7 @@ class Mario(Personaje):
         self.jump = sprites["saltar"]
         self.caminando_inverso = sprites["Reverso_caminar"]
         self.salto_inverso = pygame.transform.flip(self.jump[0],True,False)
+        
         if self.estado_personaje =="grande": 
             self.abajo = sprites["Agacharse"]
             self.abajo_inverso = pygame.transform.flip(self.abajo[0],True,False)
@@ -129,14 +134,14 @@ class Mario(Personaje):
         self.rect.y = base_y - self.rect.height 
     
     def correr(self): 
-        if not self.agachado: # Se hace para evitar que, por ejemplo el personaje corra agachado
+        if not self.esta_agachado: # Se hace para evitar que, por ejemplo el personaje corra agachado
             velocidad = 4 if self.direccion else -4
             self.running = True
             self.esta_quieto = False
             self.mover(dx=velocidad)
     
     def caminar(self):
-        if not self.agachado:
+        if not self.esta_agachado:
             caminado = 4 if self.direccion else -4
             self.mover(dx=caminado)
             self.walking = True
@@ -147,7 +152,7 @@ class Mario(Personaje):
         self.running = False
         self.walking = False
         self.esta_quieto = True
-        self.agacharse() if self.agachado else self.voltear_base()
+        self.agacharse() if self.esta_agachado else self.voltear_base()
         
     def saltar(self, velocidad_inicial=-15):
         if not self.esta_saltando:
@@ -221,10 +226,10 @@ class Mario(Personaje):
                 self.inmunidad = False
                 
     def inmunidad_daño(self):
-        if self.daño:
+        if self.inmunidad_por_daño:
             daño = pygame.time.get_ticks()
             if daño - self.daño_inmunidad> 3000:
-                self.daño = False
+                self.inmunidad_por_daño = False
             
     def morir(self):
         if self.vida == 0:
@@ -238,7 +243,7 @@ class Mario(Personaje):
       
 
         # Lógica de estados de animación
-        if self.agachado:
+        if self.esta_agachado:
             self.agacharse()
         elif self.esta_saltando:
             self.isjumping()

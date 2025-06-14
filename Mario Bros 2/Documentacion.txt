@@ -39,8 +39,7 @@ Caer() se activa mientras que la posicion Y sea menor al Limite_suelo,mientras
 que la condicion se mantiene falsa se le va sumando gravedad, lo que da el efecto 
 de caida libre.
 
-
-
+        
 
 
 

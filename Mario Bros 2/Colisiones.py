@@ -9,11 +9,17 @@ def recojer_monedas(personaje):
      personaje.contador += 1
      personaje.coin += 1
      personaje.puntos +=1000
+     
      if personaje.contador == 10:
         personaje.resetear_contador = True
         personaje.obtener_vida()
         
 def chocar_enemigo(personaje, enemigo, efecto_sonido):
+    if not enemigo.muerte and personaje.inmunidad:
+        enemigo.muerte = True
+        personaje.puntos +=400
+    
+    
     if not enemigo.muerte and (personaje.rect.bottom <= enemigo.rect.top + 10 and
         personaje.rect.right > enemigo.rect.left and 
         personaje.rect.left < enemigo.rect.right):
@@ -26,6 +32,7 @@ def chocar_enemigo(personaje, enemigo, efecto_sonido):
         enemigo.muerte = True
     
     else:
+        
         if (personaje.rect.right > enemigo.rect.left and 
             personaje.rect.left < enemigo.rect.right and
             personaje.rect.bottom > enemigo.rect.top and 
@@ -36,21 +43,21 @@ def chocar_enemigo(personaje, enemigo, efecto_sonido):
                 personaje.estado_personaje = "pequeño"
                 personaje.actualizar_estados()
                 efecto_sonido.reproducir("Pequeño")
+            
             elif(personaje.estado_personaje == "pequeño" 
-                 and not personaje.inmunidad) and not personaje.daño:
+                 and not personaje.inmunidad) and not personaje.inmunidad_por_daño:
                 personaje.vida -=1
                 personaje.actualizar_estados()
-                personaje.daño = True  
+                personaje.inmunidad_por_daño = True  
                 personaje.daño_inmunidad = pygame.time.get_ticks()
                 efecto_sonido.reproducir("Antonio")
                
+
 def hongo_Rojo(personaje,hongo):
     if personaje.estado_personaje == "pequeño":
         personaje.estado_personaje = "grande"
         personaje.puntos += 100
         personaje.actualizar_estados() 
-   
-        
 
 def inmunidad(personaje, efecto_sonido):
     if not personaje.inmunidad:
