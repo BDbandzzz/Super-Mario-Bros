@@ -47,6 +47,7 @@ python app.pyw
 - Menu de inicio y boton de pausa
 - **Nueva stats list:** Incluye imagenes de la cantidad de items
 - **Nuevo stat:** El personaje puede obtener puntos por cada accion beneficiosa
+- Scrolling de pantalla (Por corregir)
 
   ![Captura de pantalla 2025-06-01 165659](https://github.com/user-attachments/assets/97981895-2d17-4f05-a170-e1458d9fd3d3)
 
