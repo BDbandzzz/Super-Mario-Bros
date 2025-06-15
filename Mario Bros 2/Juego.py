@@ -4,6 +4,7 @@ import random
 
 from Constantes import *
 from Poderes    import Bonus, Hongo, HongoVida,Estrella
+from muro       import Muro
 from Sonidos    import SoundEfects
 from Enemigos   import Goomba, Koppa
 from Personaje  import Mario
@@ -36,7 +37,7 @@ class Juego:
         self.stars = pygame.sprite.Group()
         self.hongo_vida = pygame.sprite.Group()
         self.monedas = pygame.sprite.Group()
- 
+        self.muros = pygame.sprite.Group()
        
 
         # Instanciar elementos
@@ -46,6 +47,7 @@ class Juego:
         cargar_elementos(1, "Goomba", Goomba, self.all_lista_enemigos, X=1000, Y=580)
         cargar_elementos(1, "estrella", Estrella, self.stars, X=800, Y=580)
         cargar_elementos(1, "koopa",Koppa,self.all_lista_enemigos,X=1220,Y=0)
+        cargar_elementos(1,"wall",Muro,self.muros,X=ANCHURA_PANTALLA//2,Y=400)
        
         # Instanciamos el personaje principal.    
         self.personaje = Mario("Mario", posicionX=0, posicionY=580)
@@ -260,7 +262,7 @@ class Juego:
     def movimiento_general(self):
         subida = 0
         for monedas in self.monedas:
-                if (self.personaje.walking or self.personaje.running) and self.esta_enlamitad:   
+                if (self.personaje.walking or self.personaje.running):   
                     if self.personaje.direccion:
                         subida -= 0.2
                     else:
@@ -274,8 +276,25 @@ class Juego:
      if len(self.monedas) < 9:
         coin = Bonus("MONEDAS",x,y)
         self.monedas.add(coin)
-             
-             
+
+    
+    def middle_wall(self):
+        colisiones = pygame.sprite.spritecollide(self.personaje, self.muros, dokill=False)    
+        if colisiones:
+            x = -40 if self.personaje.rect.x <= ANCHURA_PANTALLA//2 else 40
+            
+            for muro in colisiones:
+                self.personaje.rect.x = (muro.rect.x) + x
+                if self.movimiento_constante >= 1600 or self.movimiento_constante <= 0:
+                    muro.activar = True
+
+        if (len(self.muros) == 0 and (self.personaje.rect.x 
+        >= (ANCHURA_PANTALLA//2)+40 or self.personaje.rect.x <= (ANCHURA_PANTALLA//2) - 40)) :
+            
+            new_muro = Muro("newmuro",ANCHURA_PANTALLA//2,400)
+            self.muros.add(new_muro)
+    
+    
     
     def detectar_cambio_cancion(self):       
         if self.inmunidad_anterior and not self.personaje.inmunidad:
@@ -322,25 +341,20 @@ class Juego:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_p:
                         self.pausar_sonido()
-                        
-                        
+            
+            print(self.personaje.rect.x)
+                          
             if not self.menu:            
-                self.fondo_scrolling(fondo=self.fondo_scroll,
+                self.fondo_scrolling(self.fondo_scroll,
                                      suelo=self.suelo)
-
                 
                 self.dibujar_en_pantalla(
                     self.all_lista_enemigos, self.lista_sprites,
                     self.monedas, self.hongos, self.hongo_vida, self.stars
                 )
-     
-
-            
-            
 
             if not self.juego_pausado:
-                
-                self.actualizar_sprites(
+                self.actualizar_sprites(self.muros,
                     self.all_lista_enemigos,
                     self.lista_sprites, self.monedas, self.stars,
                     self.hongos, self.hongo_vida)
@@ -361,6 +375,7 @@ class Juego:
                 self.colisiones_coins()
                 self.colisiones_estrella()
                 self.detectar_cambio_cancion()
+                self.middle_wall()
                 self.movimiento_general()
             
             else:
@@ -369,12 +384,7 @@ class Juego:
                         texto="Presione P para volver",
                         transparencia= True,
                         alpha= 170)
-   
-    
-
-   
-   
-   
+               
             if self.personaje.game_over:
                 self.juego_activo = False
             
