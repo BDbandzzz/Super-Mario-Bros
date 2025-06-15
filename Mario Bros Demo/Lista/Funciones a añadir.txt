@@ -1,0 +1,18 @@
+
+1: Sroclling de pantalla 
+2: Funciones de salto, correr, caminar. Done
+3: Sprites de  salto, correr y caminar. Done.
+4: Lo mismo de arriba, pero para enemigos. Done.
+5: Poderes ocultos (Hongo, Planta) Done.
+6: Inmunidad de la estrella Done.
+7: Lista de stats (ni se como se puede hacer eso jasjasjas) Done
+8: Coins y funcion para aumentar vida. Done.
+9: sonido (pq si, no se) Done.
+
+
+
+# Nuevas Funciones: 
+# Nuevas mecanicas para los enemigos. 
+# Sroclling de pantalla 
+# Añadir sprites de estrella o efecto inmune. 
+# 
