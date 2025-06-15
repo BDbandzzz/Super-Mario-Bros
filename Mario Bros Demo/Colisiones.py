@@ -9,7 +9,7 @@ def recojer_monedas(personaje):
      personaje.contador += 1
      personaje.coin += 1
      personaje.puntos +=1000
-     
+      
      if personaje.contador == 10:
         personaje.resetear_contador = True
         personaje.obtener_vida()
