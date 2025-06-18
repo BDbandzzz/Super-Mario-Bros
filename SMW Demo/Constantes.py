@@ -1,5 +1,5 @@
 import os
-
+import random
 
 # Archivo de constantes, aqui se añaden todas las variables necesarias
 # para no sobrecargar el codigo principal.
@@ -17,9 +17,6 @@ ALTURA_PANTALLA = 720
 
 
 #Acceso a las imagenes
-BACKGROUND_IMAGE = os.path.join(ASSETS_PATH,"Font", "Fondo1.png")
-PARALAX_IMAGES   = os.path.join(ASSETS_PATH,"Font//font")
-GROUND_IMAGE     = os.path.join(ASSETS_PATH,"Font//ground.png")
 ENEMY_IMAGE      = os.path.join(ASSETS_PATH,"SpritesEnemigos//Goomba00")
 KOOPA_PATH       = os.path.join(ASSETS_PATH,"SpritesEnemigos//Koopa//koopa")
 DEATH_ENEMY      = os.path.join(ASSETS_PATH,"SpritesEnemigos//death")
@@ -43,16 +40,20 @@ COIN_PATH       = os.path.join(ASSETS_PATH,"SpritesPowers//Coins//coins")
 HONGO_PATH      = os.path.join(ASSETS_PATH,"SpritesPowers//hongoRojo//hongo")
 ESTRELLA_PATH   = os.path.join(ASSETS_PATH,"SpritesPowers//estrella//estrella")
 
+# Acceso y eleccion de fondo aleatorio
+fondos_paralelos = ["fondo1","fondo2"]
+opcion_fondo = random.choice(fondos_paralelos)
 
+BACKGROUND_IMAGE = os.path.join(ASSETS_PATH,"background", "Fondo1.png")
+PARALAX_IMAGES   = os.path.join(ASSETS_PATH,f"background//{opcion_fondo}//font")
+GROUND_IMAGE     = os.path.join(ASSETS_PATH,f"background//{opcion_fondo}//ground.png")
 
-#Acceso a los efectos de sonido 
-SOUND_PATH = os.path.join(ASSETS_PATH,"soundEfect")
 
 # Acceso a la fuente de letra 
-FONT_PATH  = os.path.join(ASSETS_PATH,"Letra//SMW.ttf")
+FONT_PATH  = os.path.join(ASSETS_PATH,"font//SMW.ttf")
 
 #Acceso a las imagenes de la lista de stats 
 STATS_PATH = os.path.join(ASSETS_PATH,"statsList//stats")
 
-
+#Acceso al muro invisible
 WALL_PATH = os.path.join(ASSETS_PATH,"wall//wall.png")

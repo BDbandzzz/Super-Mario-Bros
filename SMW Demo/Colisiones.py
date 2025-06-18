@@ -3,7 +3,7 @@ from Poderes import Bonus, Hongo,HongoVida
 from Enemigos import Goomba
 import pygame
 
-
+pygame.mixer.init()
 
 def recojer_monedas(personaje):
      personaje.contador += 1
@@ -32,25 +32,33 @@ def chocar_enemigo(personaje, enemigo, efecto_sonido):
         enemigo.muerte = True
     
     else:
-        
+     if not personaje.game_over:   
         if (personaje.rect.right > enemigo.rect.left and 
             personaje.rect.left < enemigo.rect.right and
             personaje.rect.bottom > enemigo.rect.top and 
             personaje.rect.top < enemigo.rect.bottom):
             
             if (personaje.estado_personaje == "grande" and 
-                not personaje.inmunidad and not enemigo.muerte):
+                not personaje.inmunidad and not enemigo.muerte) and not personaje.inmunidad_por_daño:
                 personaje.estado_personaje = "pequeño"
+                personaje.daño_inmunidad = pygame.time.get_ticks()
+                personaje.inmunidad_por_daño = True  
                 personaje.actualizar_estados()
                 efecto_sonido.reproducir("Pequeño")
             
             elif(personaje.estado_personaje == "pequeño" 
-                 and not personaje.inmunidad) and not personaje.inmunidad_por_daño:
-                personaje.vida -=1
-                personaje.actualizar_estados()
-                personaje.inmunidad_por_daño = True  
+                 and not personaje.inmunidad and not enemigo.muerte) and not personaje.inmunidad_por_daño:
+                
+                personaje.inmunidad_por_daño = True
                 personaje.daño_inmunidad = pygame.time.get_ticks()
-                efecto_sonido.reproducir("Antonio")
+                personaje.vida -=1
+                personaje.game_over = True
+                personaje.actualizar_estados()
+                personaje.time_death = pygame.time.get_ticks()
+                pygame.mixer_music.pause()
+                efecto_sonido.reproducir_musica_fondo("Muerte",loop=False)  
+                
+       
                
 
 def hongo_Rojo(personaje,hongo):

@@ -18,14 +18,11 @@ class Personaje(pygame.sprite.Sprite):
         self.coin = coin
         self.contador = contador 
         self.game_over = False
-    
+        self.vidas_actuales = self.vida
         # Contador 
         self.resetear_contador = False
         self.contador = 0
         self.puntos = 0
-       
-       
-       
      
     #Se añade una funcion para mover el personaje y se la asigna un limite
     # maximo para no sobrepasar los limites del suelo y la pantalla 
@@ -33,9 +30,11 @@ class Personaje(pygame.sprite.Sprite):
     def mover(self, dx=0, dy=0):
         self.rect.x += dx
         self.rect.y += dy
-        self.rect.x = max(0, min(self.rect.x,  ANCHURA_PANTALLA- self.rect.width))
-        self.rect.y = max(0, min(self.rect.y, (ALTURA_PANTALLA-82) - self.rect.height))
         
+        if not self.game_over:
+            self.rect.x = max(0, min(self.rect.x,  ANCHURA_PANTALLA- self.rect.width))
+            self.rect.y = max(0, min(self.rect.y, (ALTURA_PANTALLA-82) - self.rect.height))
+            
 
 class Mario(Personaje):
     def __init__(self, nombre, posicionX, posicionY, estado="Vivo", vida=3):
@@ -58,6 +57,7 @@ class Mario(Personaje):
         self.frame_tiempo = pygame.time.get_ticks()
         self.daño_inmunidad = pygame.time.get_ticks()
         self.inmunidad_time = pygame.time.get_ticks()
+        self.time_death = pygame.time.get_ticks()
         
                 
         # Se cargan las imagenes para realizar animaciones.
@@ -66,9 +66,9 @@ class Mario(Personaje):
             "saltar": cargar_sprites(1, JUMP_PATH, False, 3),
             "caminar": cargar_sprites(3, RUNNING_PATH, False, escala=3),
             "Base": cargar_sprites(1, PLAYER_IMAGE, False, escala=3),
-            "Reverso_caminar": voltear_sprites(
-                cargar_sprites(3, RUNNING_PATH, False, escala=3)
-            ),
+            "Reverso_caminar": voltear_sprites(cargar_sprites(3, RUNNING_PATH, False, escala=3)),
+            "death": cargar_sprites(1,DEATH_PATH,False,escala=3)
+            
             },
             "grande": {
             "saltar": cargar_sprites(1, JUMP_GRANDE, False, 3),
@@ -112,13 +112,20 @@ class Mario(Personaje):
         self.caminando_inverso = sprites["Reverso_caminar"]
         self.salto_inverso = pygame.transform.flip(self.jump[0],True,False)
         
+        
+        if self.estado_personaje == "pequeño":
+            self.muerte = sprites["death"]
+
+       
         if self.estado_personaje =="grande": 
             self.abajo = sprites["Agacharse"]
             self.abajo_inverso = pygame.transform.flip(self.abajo[0],True,False)
-            self.redimensionar()
-        else:
-            self.redimensionar()
-      
+        self.redimensionar()
+        
+       
+           
+        
+        
     def redimensionar(self): # Guarda y ajusta el resize de la imagen al actualizar el estado de mario  
         # Guarda la posición de los pies antes de cambiar el rect
         base_y = self.rect.y + self.rect.height
@@ -155,26 +162,25 @@ class Mario(Personaje):
         self.agacharse() if self.esta_agachado else self.voltear_base()
         
     def saltar(self, velocidad_inicial=-15):
-        if not self.esta_saltando:
+        if not self.game_over:    
+            if not self.esta_saltando:     
+                self.esta_saltando = True
+                self.esta_quieto = False
+                self.sonidos.reproducir("Salto")
+                self.altura_salto = velocidad_inicial
+                    
+            elif self.activar_salto_goomba:
+                velocidad_inicial = -5
+                self.sonidos.reproducir("KillGoomba")
+                self.altura_salto = velocidad_inicial
+                self.esta_saltando = True
+                self.esta_quieto = False
+                self.activar_salto_goomba = False
+                
+            self.image = self.jump[0] if self.direccion else self.salto_inverso
             
-            self.esta_saltando = True
-            self.esta_quieto = False
-            self.sonidos.reproducir("Salto")
-            self.altura_salto = velocidad_inicial
-            
-        elif self.activar_salto_goomba:
-            velocidad_inicial = -5
-            
-            self.sonidos.reproducir("KillGoomba")
-            self.altura_salto = velocidad_inicial
-            self.esta_saltando = True
-            self.esta_quieto = False
-            self.activar_salto_goomba = False
-        
-        self.image = self.jump[0] if self.direccion else self.salto_inverso
-           
     def caer(self):
-        if self.esta_saltando:
+        if self.esta_saltando and not self.game_over:
             self.altura_salto += self.gravedad
             self.mover(dy=self.altura_salto)
             limite_piso = (ALTURA_PANTALLA-82) - self.rect.height
@@ -185,7 +191,15 @@ class Mario(Personaje):
                 
                 if not self.running:
                     self.esta_quieto = True
-                
+        elif self.game_over: 
+            self.altura_salto += self.gravedad
+            self.mover(dy=self.altura_salto)
+            limite_piso = 8000
+            if self.rect.y >= limite_piso:
+                self.rect.y = limite_piso
+                self.altura_salto = 0
+             
+            
     def isjumping(self):
         self.image = self.jump[0] if self.direccion else self.salto_inverso
     
@@ -232,9 +246,14 @@ class Mario(Personaje):
                 self.inmunidad_por_daño = False
             
     def morir(self):
-        if self.vida == 0:
-            self.game_over = True
-                  
+        self.movimiento_activo = self.running or self.walking
+        if self.game_over:
+            self.image = self.muerte[0]
+            self.mover(dy=-6)
+            
+            if self.movimiento_activo:
+                self.mover(dx=2 if self.direccion else -2)
+            
     def update(self):
         self.actualizar_inmunidad()
         self.inmunidad_daño()
@@ -243,7 +262,9 @@ class Mario(Personaje):
       
 
         # Lógica de estados de animación
-        if self.esta_agachado:
+        if self.game_over:
+            self.morir()
+        elif self.esta_agachado:
             self.agacharse()
         elif self.esta_saltando:
             self.isjumping()
@@ -252,3 +273,5 @@ class Mario(Personaje):
             self.animar_personaje(frame_carga=frame,fotogramas=3)
         elif self.esta_quieto:
             self.voltear_base()
+            
+     
