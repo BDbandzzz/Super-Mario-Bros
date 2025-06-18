@@ -422,8 +422,7 @@ class Juego:
                 self.fondo_scrolling(self.fondo_scroll,
                                      suelo=self.suelo)
                 
-                self.dibujar_en_pantalla(self.muros,
-                    self.all_lista_enemigos, self.lista_sprites,
+                self.dibujar_en_pantalla(self.all_lista_enemigos, self.lista_sprites,
                     self.monedas, self.hongos, self.hongo_vida, self.stars
                 )
 
