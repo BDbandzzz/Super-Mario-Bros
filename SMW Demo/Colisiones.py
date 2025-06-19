@@ -32,7 +32,7 @@ def chocar_enemigo(personaje, enemigo, efecto_sonido):
         enemigo.muerte = True
     
     else:
-     if not personaje.game_over:   
+     if not personaje.perdida_vida:   
         if (personaje.rect.right > enemigo.rect.left and 
             personaje.rect.left < enemigo.rect.right and
             personaje.rect.bottom > enemigo.rect.top and 
@@ -52,7 +52,7 @@ def chocar_enemigo(personaje, enemigo, efecto_sonido):
                 personaje.inmunidad_por_daño = True
                 personaje.daño_inmunidad = pygame.time.get_ticks()
                 personaje.vida -=1
-                personaje.game_over = True
+                personaje.perdida_vida = True
                 personaje.actualizar_estados()
                 personaje.time_death = pygame.time.get_ticks()
                 pygame.mixer_music.pause()

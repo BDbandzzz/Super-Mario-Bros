@@ -1,7 +1,7 @@
 # Clase Personaje
 import pygame
 from Constantes import *
-from Funciones import cargar_sprites,voltear_sprites
+from Funciones import cargar_sprites,voltear_sprites,gestor_tiempo
 from Sonidos import SoundEfects
 
 pygame.mixer.init()
@@ -17,8 +17,9 @@ class Personaje(pygame.sprite.Sprite):
         self.vida = vida
         self.coin = coin
         self.contador = contador 
-        self.game_over = False
+        self.perdida_vida = False
         self.vidas_actuales = self.vida
+        
         # Contador 
         self.resetear_contador = False
         self.contador = 0
@@ -31,13 +32,13 @@ class Personaje(pygame.sprite.Sprite):
         self.rect.x += dx
         self.rect.y += dy
         
-        if not self.game_over:
+        if not self.perdida_vida:
             self.rect.x = max(0, min(self.rect.x,  ANCHURA_PANTALLA- self.rect.width))
             self.rect.y = max(0, min(self.rect.y, (ALTURA_PANTALLA-82) - self.rect.height))
             
 
 class Mario(Personaje):
-    def __init__(self, nombre, posicionX, posicionY, estado="Vivo", vida=3):
+    def __init__(self, nombre, posicionX, posicionY, estado="Vivo", vida=1):
         super().__init__(nombre, posicionX, posicionY, estado, vida)
         
        
@@ -162,7 +163,7 @@ class Mario(Personaje):
         self.agacharse() if self.esta_agachado else self.voltear_base()
         
     def saltar(self, velocidad_inicial=-15):
-        if not self.game_over:    
+        if not self.perdida_vida:    
             if not self.esta_saltando:     
                 self.esta_saltando = True
                 self.esta_quieto = False
@@ -180,7 +181,7 @@ class Mario(Personaje):
             self.image = self.jump[0] if self.direccion else self.salto_inverso
             
     def caer(self):
-        if self.esta_saltando and not self.game_over:
+        if self.esta_saltando and not self.perdida_vida:
             self.altura_salto += self.gravedad
             self.mover(dy=self.altura_salto)
             limite_piso = (ALTURA_PANTALLA-82) - self.rect.height
@@ -191,7 +192,7 @@ class Mario(Personaje):
                 
                 if not self.running:
                     self.esta_quieto = True
-        elif self.game_over: 
+        elif self.perdida_vida: 
             self.altura_salto += self.gravedad
             self.mover(dy=self.altura_salto)
             limite_piso = 8000
@@ -240,14 +241,16 @@ class Mario(Personaje):
                 self.inmunidad = False
                 
     def inmunidad_daño(self):
+        self.tiempo_daño_inmunidad = gestor_tiempo(parametro_tiempo=self.daño_inmunidad,
+                                                   tiempo_transcurrido=3000)
+        
         if self.inmunidad_por_daño:
-            daño = pygame.time.get_ticks()
-            if daño - self.daño_inmunidad> 3000:
+            if self.tiempo_daño_inmunidad:
                 self.inmunidad_por_daño = False
             
     def morir(self):
         self.movimiento_activo = self.running or self.walking
-        if self.game_over:
+        if self.perdida_vida:
             self.image = self.muerte[0]
             self.mover(dy=-6)
             
@@ -263,7 +266,7 @@ class Mario(Personaje):
       
 
         # Lógica de estados de animación
-        if self.game_over:
+        if self.perdida_vida:
             self.morir()
         elif self.esta_agachado:
             self.agacharse()

@@ -113,6 +113,7 @@ class Estrella(Poderes):
         if self.esta_saltando:
             self.altura_salto += self.gravedad
             self.mover(dy=self.altura_salto)
+            
             limite_piso = (ALTURA_PANTALLA-82) - self.rect.height
             if self.rect.y >= limite_piso:
                 self.rect.y = limite_piso

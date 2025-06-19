@@ -1,6 +1,6 @@
 import pygame
 from Constantes import *
-from Funciones import cargar_sprites,voltear_sprites
+from Funciones import cargar_sprites,voltear_sprites,gestor_tiempo
 
 class Enemigo(pygame.sprite.Sprite):
     
@@ -48,10 +48,11 @@ class Enemigo(pygame.sprite.Sprite):
             self.image = imagenes[self.frame_actual] if self.direccion else inverso[self.frame_actual]
     
     def morir(self,image):
-        tiempo = pygame.time.get_ticks()
+        self.tiempo_death = gestor_tiempo(parametro_tiempo=self.tiempo_muerte,
+                                          tiempo_transcurrido=700)
         if self.muerte:
             self.image = image[0]
-            if tiempo - self.tiempo_muerte > 1000:
+            if self.tiempo_death:
                 self.kill()
         
         

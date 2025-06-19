@@ -76,9 +76,34 @@ def renderizar_texto(fuente, pantalla, texto=str,transparencia=bool,alpha=int):
         fondo = pygame.Surface((ANCHURA_PANTALLA,ALTURA_PANTALLA),pygame.SRCALPHA)
         fondo.fill((0,0,0,alpha))
     
+    
     texto_pantalla = fuente.render(texto,False,WHITE)
     posicion_texto = texto_pantalla.get_rect(center=(ANCHURA_PANTALLA//2,
                                                         ALTURA_PANTALLA//2))        
     pantalla.blit(fondo,(0,0))
     pantalla.blit(texto_pantalla,posicion_texto)
+
+
+def gestor_tiempo(parametro_tiempo,tiempo_transcurrido):
+        time = pygame.time.get_ticks()
+        if time - parametro_tiempo > tiempo_transcurrido:
+            return True
+
+
+def dibujar_imagenes_aleatorias(imagen,pantalla,posX,posY,escala=False):
+    imagen_cargada = pygame.image.load(imagen).convert_alpha()
+    
+    if escala:
+        ancho = int(imagen_cargada.get_width() * 3)
+        alto = int(imagen_cargada.get_height() * 3)
+        imagen_cargada = pygame.transform.scale(imagen_cargada, (ancho, alto))
+    
+    posicion = imagen_cargada.get_rect(center=(ANCHURA_PANTALLA//2,ALTURA_PANTALLA//2))
+    deformar_posicion_x = posicion[0] + posX
+    deformar_posicion_y = posicion[1] + posY 
+    
+    pantalla.blit(imagen_cargada,(deformar_posicion_x,deformar_posicion_y))
+
+    
+        
         

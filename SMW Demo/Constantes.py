@@ -57,3 +57,9 @@ STATS_PATH = os.path.join(ASSETS_PATH,"Sprites//statsList//stats")
 
 #Acceso al muro invisible
 WALL_PATH = os.path.join(ASSETS_PATH,"Sprites//wall//wall.png")
+
+
+
+#Imagenes random
+MENU_VIDAS_IMAGE = os.path.join(ASSETS_PATH,"Sprites//SpritesMario//basePequeno//mario0.png")
+GAME_OVER_IMAGE = os.path.join(ASSETS_PATH,"Sprites//SpritesMario//morir//mario0.png")
