@@ -38,15 +38,15 @@ python app.pyw
 - P para Pausar 
 
 
-- <h1 align="center"> Preview 📺 </h1>
----
+<h1 align="center"> Preview 📺 </h1>
+
 ![Captura de pantalla 2025-05-28 005055](https://github.com/user-attachments/assets/ecac864a-83ca-4be9-8ee6-6a0e19ad4eca)
 
 ## <h1 align="center"> Upgrades 🔄️ </h1>
----
+
 - Menu de inicio y boton de pausa
 - **Nueva stats list:** Incluye imagenes de la cantidad de items
 - **Nuevo stat:** El personaje puede obtener puntos por cada accion beneficiosa
 
-  ![Captura de pantalla 2025-06-01 165659](https://github.com/user-attachments/assets/97981895-2d17-4f05-a170-e1458d9fd3d3)
+![new background](https://github.com/user-attachments/assets/1e1fb351-2583-4fef-8abc-073f900b5ea9)
 
