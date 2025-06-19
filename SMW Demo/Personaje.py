@@ -6,7 +6,7 @@ from Sonidos import SoundEfects
 
 pygame.mixer.init()
 class Personaje(pygame.sprite.Sprite):
-    def __init__(self,nombre, posicionX, posicionY, estado="vivo", vida=3,coin=0,contador= 0):
+    def __init__(self,nombre, posicionX, posicionY, estado="vivo", vida=0,coin=0,contador= 0):
         super().__init__()
         
         #Atributos principales del Personaje
@@ -253,7 +253,8 @@ class Mario(Personaje):
             
             if self.movimiento_activo:
                 self.mover(dx=2 if self.direccion else -2)
-            
+    
+
     def update(self):
         self.actualizar_inmunidad()
         self.inmunidad_daño()

@@ -30,7 +30,7 @@ class Juego:
         self.fondo_scroll = cargar_sprites(3,PARALAX_IMAGES,True)
         self.stats_images = cargar_sprites(2,STATS_PATH,False,escala=3)
         self.fuente= pygame.font.Font(FONT_PATH, 50)
-        self.nombre_cancion = "DonkeyK" 
+       
         
         # Grupos de sprites
         self.all_lista_enemigos = pygame.sprite.Group()
@@ -58,10 +58,15 @@ class Juego:
         
         # Se establece el sonido de fondo, "Nombre" 
         # indica el sonido que se va a reproducir dentro del diccionario "self.sonidos_fondo"
+        self.nombre_cancion = "DonkeyK" 
         self.sonido_Fondo = SoundEfects()
         self.sonido_Fondo.reproducir_musica_fondo(nombre=self.nombre_cancion)
+        
+        """ Gestor de Pantallas"""
+        
         self.juego_activo = True
         self.juego_pausado = False
+        self.juego_terminado = False
         self.menu = True
     
         
@@ -69,14 +74,25 @@ class Juego:
         self.inmunidad_anterior = self.personaje.inmunidad
         self.hongos_recogidos = False
         self.vidas_recogidos = False
-        self.contador_enemigos = 0
-        self.movimiento_constante = 0
         self.movimiento_activo = False
         self.esta_enlamitad = False
         self.pantalla_vidas = False
+     
+        self.tiempo_game_over = pygame.time.get_ticks()
+        self.resetear_contador_vidas = False    
+        self.contador_enemigos = 0
+        self.movimiento_constante = 0
     
-    def limpiar_listas(self):
+    
+    
+    def gestor_tiempo(self,parametro_tiempo,tiempo_transcurrido):
+        time = pygame.time.get_ticks()
+        if time - parametro_tiempo > tiempo_transcurrido:
+            return True
         
+        
+        
+    def limpiar_listas(self):
         self.all_lista_enemigos.empty()
         self.lista_sprites.empty()
         self.hongos.empty()
@@ -84,16 +100,11 @@ class Juego:
         self.hongo_vida.empty()
         self.monedas.empty()
         self.muros.empty()
-       
-    
-    
-    
     
     
     def resetear_elementos(self):
         self.vidas_actuales = self.personaje.vida
-        
-        coins_random(20, "coin", Bonus, self.monedas, X=ANCHURA_PANTALLA-40, Y=320)
+        coins_random(10, "coin", Bonus, self.monedas, X=ANCHURA_PANTALLA-40, Y=320)
         cargar_elementos(1, "Hongo", Hongo, self.hongos, 400, Y=580)
         cargar_elementos(1, "HongoVida", HongoVida, self.hongo_vida, 600, 580)
         cargar_elementos(1, "Goomba", Goomba, self.all_lista_enemigos, X=1000, Y=580)
@@ -104,11 +115,22 @@ class Juego:
         # Instanciamos el personaje principal.    
         self.personaje = Mario("Mario", posicionX=0, posicionY=580,vida=self.vidas_actuales)
         self.lista_sprites.add(self.personaje)
+        
+        if self.resetear_contador_vidas:
+            self.reset_stats()
+            self.resetear_contador_vidas = False
+        
         self.contador_enemigos = 0
         self.movimiento_constante = 0
-
+        self.personaje.contador = 0
 
             # // Funciones para el comportamiento del scroll //
+    def reset_stats(self):
+        self.personaje.vida = 3
+        self.contador_enemigos = 0
+        self.movimiento_constante = 0
+        self.personaje.contador = 0
+       
     
     def fondo_scrolling(self,fondo,suelo):
         for x in  range(5):
@@ -127,6 +149,7 @@ class Juego:
                                         , ALTURA_PANTALLA - altura_suelo)))
     
     def middle_wall(self):
+        
         colisiones = pygame.sprite.spritecollide(self.personaje, self.muros, dokill=False)    
         if colisiones:
                 x = -40 if self.personaje.rect.x <= ANCHURA_PANTALLA//2 else 30
@@ -155,17 +178,24 @@ class Juego:
             pygame.mixer_music.unpause()
         
         
-    def game_over(self):
+    def perdida_vida_gestor(self):
         self.guardar_movimiento = self.movimiento_constante        
         if self.personaje.game_over:
             time = pygame.time.get_ticks()
-            if time - self.personaje.time_death > 5000:
+            if time - self.personaje.time_death > 5000 and not self.personaje.vida <= 0:
                 self.pantalla_vidas = True
                 self.limpiar_listas()
                 self.movimiento_constante = self.guardar_movimiento
         
+        if self.personaje.vida <= 0 and time - self.personaje.time_death > 5000:
+            self.juego_terminado = True
+            self.personaje.game_over = False
+            self.tiempo_game_over = pygame.time.get_ticks()
+            self.limpiar_listas()
+        
     
-    def pantalla_gameover(self):
+    def perdida_vida_menu(self):
+        
         while self.pantalla_vidas:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT: 
@@ -183,13 +213,47 @@ class Juego:
 
             pygame.display.flip()
             self.FPS.tick(60)
-        self.resetear_elementos()
+        self.resetear_elementos() if not self.juego_terminado else None
         self.sonido_Fondo.reproducir_musica_fondo(self.nombre_cancion)
     
     
+    def game_over_menu(self):
+        self.tiempo_transcurrido = False 
+        self.sonido_Fondo.reproducir("GameOver")
+
+        while self.juego_terminado:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.juego_terminado = False
+                    pygame.quit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN and self.tiempo_transcurrido:
+                        self.juego_terminado = False
+
+            # Verifica si han pasado 7000 ms desde el inicio del Game Over
+            self.tiempo_transcurrido = self.gestor_tiempo(
+                parametro_tiempo=self.tiempo_game_over,
+                tiempo_transcurrido=7000
+            )
+
+            renderizar_texto(
+                fuente=self.fuente,
+                pantalla=self.PANTALLA,
+                texto="Game Over.",
+                transparencia=False
+            )
+
+            pygame.display.flip()
+            self.FPS.tick(60)
+
+        # Reiniciar el juego
+        self.resetear_contador_vidas = True
+        self.resetear_elementos()
+        self.sonido_Fondo.reproducir_musica_fondo(self.nombre_cancion)
+    
     def menu_inicio(self):
         pygame.mixer_music.pause() 
-        
+      
         while self.menu:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT: 
@@ -198,7 +262,8 @@ class Juego:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
                         self.menu = False   
-                
+        
+        
             renderizar_texto(fuente=self.fuente,
                          pantalla=self.PANTALLA,
                         texto="Presiona Enter para iniciar",
@@ -242,8 +307,6 @@ class Juego:
                     else:
                         subida +=0.2
                 monedas.rect.x += subida 
-     
-                
                 
  # --------------------------------------------------------------------------------   
     
@@ -256,6 +319,8 @@ class Juego:
         self.personaje.walking = False
   
         keys = pygame.key.get_pressed()
+        
+        
         if not self.personaje.game_over:
             if keys[pygame.K_DOWN] or keys[pygame.K_s]:
                 
@@ -407,44 +472,66 @@ class Juego:
 
 
     def bucle_principal(self):
-        while self.juego_activo:  
+        while self.juego_activo:
+            # Verificar si el personaje perdió una vida
             if self.personaje.game_over:
-                self.game_over()
-            
+                self.perdida_vida_gestor()
+
+            # Manejo de eventos
             for event in pygame.event.get():
-                if event.type == pygame.QUIT: 
+                if event.type == pygame.QUIT:
                     self.juego_activo = False
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_p:
                         self.pausar_sonido()
-                                  
-            if not self.menu:            
-                self.fondo_scrolling(self.fondo_scroll,
-                                     suelo=self.suelo)
-                
-                self.dibujar_en_pantalla(self.all_lista_enemigos, self.lista_sprites,
-                    self.monedas, self.hongos, self.hongo_vida, self.stars
+
+            # Dibujar si no estamos en el menú
+            if not self.menu:
+                self.fondo_scrolling(
+                    self.fondo_scroll,
+                    suelo=self.suelo
                 )
 
+                self.dibujar_en_pantalla(
+                    self.all_lista_enemigos,
+                    self.lista_sprites,
+                    self.monedas,
+                    self.hongos,
+                    self.hongo_vida,
+                    self.stars
+                )
+
+            # Actualizar lógica del juego si no está pausado
             if not self.juego_pausado:
                 self.actualizar_sprites(self.lista_sprites)
-                
-                self.actualizar_sprites(self.muros,
-                    self.all_lista_enemigos,
-                    self.monedas, self.stars,
-                    self.hongos, self.hongo_vida) if not self.personaje.game_over else None
-                
-                self.generar_texto(f"{self.personaje.vida}", 
-                                    f"{self.personaje.coin}",
-                                    f"{self.personaje.puntos}")
-    
-                if not self.personaje.game_over and not self.pantalla_vidas:    
+
+                if not self.personaje.game_over:
+                    self.actualizar_sprites(
+                        self.muros,
+                        self.all_lista_enemigos,
+                        self.monedas,
+                        self.stars,
+                        self.hongos,
+                        self.hongo_vida
+                    )
+
+                self.generar_texto(
+                    f"{self.personaje.vida}",
+                    f"{self.personaje.coin}",
+                    f"{self.personaje.puntos}"
+                )
+
+                # Verificar condiciones para ejecutar lógica de juego activa
+                if (not self.personaje.game_over and
+                    not self.juego_terminado and
+                    not self.pantalla_vidas):
+
                     self.movimiento_scroll()
-                    self.manejar_personaje() 
+                    self.manejar_personaje()
                     self.colisiones_enemigos()
-                    self.drop_hongos() 
-                    self.drop_vidas() 
-                    self.drop_enemigos() 
+                    self.drop_hongos()
+                    self.drop_vidas()
+                    self.drop_enemigos()
                     self.colisiones_Hongo()
                     self.colisiones_hongoVidas()
                     self.colisiones_coins()
@@ -452,21 +539,27 @@ class Juego:
                     self.detectar_cambio_cancion()
                     self.middle_wall()
                     self.movimiento_sprites()
-            
+
+            # Renderizado del mensaje de pausa
             else:
-               renderizar_texto(fuente=self.fuente,
-                         pantalla=self.PANTALLA,
-                        texto="Presione P para volver",
-                        transparencia= True,
-                        alpha= 170)
+                renderizar_texto(
+                    fuente=self.fuente,
+                    pantalla=self.PANTALLA,
+                    texto="Presione P para volver",
+                    transparencia=True,
+                    alpha=170
+                )
 
+            # Menú de vidas si se activa
             if self.pantalla_vidas:
-                self.pantalla_gameover()
+                self.perdida_vida_menu()
 
+            # Menú de Game Over
+            if self.juego_terminado:
+                self.game_over_menu()
 
+            # Control del framerate y actualización de pantalla
             self.FPS.tick(60)
             pygame.display.flip()
-            
-        pygame.quit()
 
 
