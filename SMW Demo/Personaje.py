@@ -38,7 +38,7 @@ class Personaje(pygame.sprite.Sprite):
             
 
 class Mario(Personaje):
-    def __init__(self, nombre, posicionX, posicionY, estado="Vivo", vida=1):
+    def __init__(self, nombre, posicionX, posicionY, estado="Vivo", vida=3):
         super().__init__(nombre, posicionX, posicionY, estado, vida)
         
        
@@ -64,21 +64,21 @@ class Mario(Personaje):
         # Se cargan las imagenes para realizar animaciones.
         self.sprites_mario = {
             "pequeño": {
-            "saltar": cargar_sprites(1, JUMP_PATH, False, 3),
+            "saltar":  cargar_sprites(1, JUMP_PATH, False, 3),
             "caminar": cargar_sprites(3, RUNNING_PATH, False, escala=3),
-            "Base": cargar_sprites(1, PLAYER_IMAGE, False, escala=3),
+            "Base":    cargar_sprites(1, PLAYER_IMAGE, False, escala=3),
             "Reverso_caminar": voltear_sprites(cargar_sprites(3, RUNNING_PATH, False, escala=3)),
-            "death": cargar_sprites(1,DEATH_PATH,False,escala=3)
+            "death":   cargar_sprites(1,DEATH_PATH,False,escala=3)
             
             },
             "grande": {
-            "saltar": cargar_sprites(1, JUMP_GRANDE, False, 3),
+            "saltar":  cargar_sprites(1, JUMP_GRANDE, False, 3),
             "caminar": cargar_sprites(3, RUNNING_GRANDE, False, escala=3),
-            "Base": cargar_sprites(1, BASE_GRANDE, False, escala=3),
+            "Base":    cargar_sprites(1, BASE_GRANDE, False, escala=3),
             "Reverso_caminar": voltear_sprites(
-                cargar_sprites(3, RUNNING_GRANDE, False, escala=3)
+                       cargar_sprites(3, RUNNING_GRANDE, False, escala=3)
             ),
-            "Agacharse": cargar_sprites(1, DOWN_GRANDE, False, escala=3),
+            "Agacharse":cargar_sprites(1, DOWN_GRANDE, False, escala=3),
             },
         }
     # Imagenes iniciales 
@@ -116,8 +116,7 @@ class Mario(Personaje):
         
         if self.estado_personaje == "pequeño":
             self.muerte = sprites["death"]
-
-       
+            
         if self.estado_personaje =="grande": 
             self.abajo = sprites["Agacharse"]
             self.abajo_inverso = pygame.transform.flip(self.abajo[0],True,False)

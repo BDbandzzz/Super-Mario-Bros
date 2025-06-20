@@ -58,6 +58,10 @@ STATS_PATH = os.path.join(ASSETS_PATH,"Sprites//statsList//stats")
 #Acceso al muro invisible
 WALL_PATH = os.path.join(ASSETS_PATH,"Sprites//wall//wall.png")
 
+# Acceso a los efectos visuales
+ESTRELLA_EFFECT_PATH = os.path.join(ASSETS_PATH,"Sprites//EfectosVisuales//estrella//efectopequeño//effect_pequeño")
+ESTRELLA_EFFECT_GRANDE_PATH = os.path.join(ASSETS_PATH,"Sprites//EfectosVisuales//estrella//efectogrande//effect_pequeño")
+
 
 
 #Imagenes random

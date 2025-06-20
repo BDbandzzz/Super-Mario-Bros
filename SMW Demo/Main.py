@@ -8,6 +8,7 @@ from Muro       import Muro
 from Sonidos    import SoundEfects
 from Enemigos   import Goomba, Koppa
 from Personaje  import Mario
+from EfectosVisuales import EfectoEstrella
 from Funciones  import (cargar_elementos, coins_random,
                         cargar_sprites,renderizar_texto,gestor_tiempo,
                         dibujar_imagenes_aleatorias)
@@ -42,7 +43,12 @@ class Juego:
         self.hongo_vida = pygame.sprite.Group()
         self.monedas = pygame.sprite.Group()
         self.muros = pygame.sprite.Group()
-       
+        self.efectos_visuales = pygame.sprite.Group()
+
+
+        # Instanciamos el personaje principal.    
+        self.personaje = Mario("Mario", posicionX=0, posicionY=580)
+        self.lista_sprites.add(self.personaje)
 
         # Instanciar elementos
         coins_random(5, "coin", Bonus, self.monedas, X=ANCHURA_PANTALLA-40, Y=320)
@@ -52,10 +58,7 @@ class Juego:
         cargar_elementos(1, "estrella", Estrella, self.stars, X=800, Y=580)
         cargar_elementos(1, "koopa",Koppa,self.all_lista_enemigos,X=1220,Y=0)
         cargar_elementos(1,"wall",Muro,self.muros,X=ANCHURA_PANTALLA//2,Y=400)
-       
-        # Instanciamos el personaje principal.    
-        self.personaje = Mario("Mario", posicionX=0, posicionY=580)
-        self.lista_sprites.add(self.personaje)
+        cargar_elementos(1,"efectovisual",EfectoEstrella,self.efectos_visuales,X=self.personaje.rect.x,Y=self.personaje.rect.y)
 
         
         # Se establece el sonido de fondo, "Nombre" 
@@ -84,7 +87,7 @@ class Juego:
         self.resetear_contador_vidas = False    
         self.contador_enemigos = 0
         self.movimiento_constante = 0
-    
+
     
     
  
@@ -97,7 +100,7 @@ class Juego:
         self.hongo_vida.empty()
         self.monedas.empty()
         self.muros.empty()
-    
+        self.efectos_visuales.empty()
     
     def resetear_elementos(self):
         self.vidas_actuales = self.personaje.vida
@@ -107,15 +110,15 @@ class Juego:
         cargar_elementos(1, "Goomba", Goomba, self.all_lista_enemigos, X=1000, Y=580)
         cargar_elementos(1, "estrella", Estrella, self.stars, X=800, Y=580)
         cargar_elementos(1, "koopa",Koppa,self.all_lista_enemigos,X=1220,Y=0)
-        cargar_elementos(1,"wall",Muro,self.muros,X=ANCHURA_PANTALLA//2,Y=400)
-       
+        cargar_elementos(1,"efectovisual",EfectoEstrella,self.efectos_visuales,X=self.personaje.rect.x,Y=self.personaje.rect.y)
+
         # Instanciamos el personaje principal.    
         self.personaje = Mario("Mario", posicionX=0, posicionY=580,vida=self.vidas_actuales)
         self.lista_sprites.add(self.personaje)
         self.reset_stats()
      
         
-    
+
             # // Funciones para el comportamiento del scroll //
     def reset_stats(self):
         if self.resetear_contador_vidas:
@@ -126,7 +129,21 @@ class Juego:
         self.movimiento_constante = 0
         self.personaje.contador = 0
        
-    
+    def efecto_visual_inmunidad(self):        
+        if self.personaje.inmunidad:
+            self.dibujar_en_pantalla(self.efectos_visuales)
+            self.actualizar_sprites(self.efectos_visuales)
+            for efectos in self.efectos_visuales:
+                efectos.mover(dx=self.personaje.rect.x,
+                            dy=self.personaje.rect.y)
+                if self.personaje.esta_agachado:
+                    efectos.mover(dy=(self.personaje.rect.y),dx=self.personaje.rect.x)
+                if self.personaje.estado_personaje == "grande":
+                    efectos.activar = True
+                else:
+                    efectos.activar = False
+                            
+
     def fondo_scrolling(self,fondo,suelo):
         for x in  range(5):
             self.velocidad = 0.2
@@ -212,14 +229,14 @@ class Juego:
                                         pantalla=self.PANTALLA,
                                         posX=-60,
                                         posY=0,escala=True)
-            
-
-            
-            
-            
+    
+    
+    
+    
             pygame.display.flip()
             self.FPS.tick(60)
-        self.resetear_elementos() if not self.juego_terminado else None
+        if not self.juego_terminado:    
+            self.resetear_elementos()
         self.sonido_Fondo.reproducir_musica_fondo(self.nombre_cancion)
     
     def menu_game_over(self):
@@ -256,7 +273,7 @@ class Juego:
             pygame.display.flip()
             self.FPS.tick(60)
 
-        # Reiniciar el juego
+       
         self.resetear_contador_vidas = True
         self.resetear_elementos()
         self.sonido_Fondo.reproducir_musica_fondo(self.nombre_cancion)
@@ -564,7 +581,10 @@ class Juego:
             # Menú de Game Over
             if self.juego_terminado:
                 self.menu_game_over()
-
+            
+            if self.personaje.inmunidad:
+                self.efecto_visual_inmunidad()
+         
             # Control del framerate y actualización de pantalla
             self.FPS.tick(60)
             pygame.display.flip()
