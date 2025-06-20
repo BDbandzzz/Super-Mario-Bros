@@ -128,7 +128,38 @@ class Juego:
         self.contador_enemigos = 0
         self.movimiento_constante = 0
         self.personaje.contador = 0
-       
+    
+    
+    def concatenar_listas(self,lista,*listas):
+        for elementos in listas:
+            lista.add(*elementos)
+        return lista
+    
+    
+    def manejar_scroll_sprites(self):
+        self.lista_abs = pygame.sprite.Group()
+        self.lista_abs = self.concatenar_listas(self.lista_abs,
+                                                self.all_lista_enemigos,
+                                                self.hongos,
+                                                self.hongo_vida,
+                                                self.monedas)
+        for elementos in self.lista_abs:
+            movimiento_elementos = 0 
+            if self.personaje.running:
+                movimiento_elementos +=6
+            elif self.personaje.walking:
+                movimiento_elementos +=2
+            
+            
+            if self.esta_enlamitad:
+                if self.personaje.direccion:
+                    elementos.rect.x -= movimiento_elementos
+                else:
+                    elementos.rect.x += movimiento_elementos
+                    
+    
+        
+    
     def efecto_visual_inmunidad(self):        
         if self.personaje.inmunidad:
             self.dibujar_en_pantalla(self.efectos_visuales)
@@ -167,9 +198,12 @@ class Juego:
                 x = -40 if self.personaje.rect.x <= ANCHURA_PANTALLA//2 else 30
                 for muro in colisiones:
                     self.personaje.rect.x = (muro.rect.x) + x
+                    self.esta_enlamitad = True
                     if self.movimiento_constante >= 1600 or self.movimiento_constante <= 0:
                         muro.activar = True                    
-
+        else:
+            self.esta_enlamitad = False
+            
         if (len(self.muros) == 0 and (self.personaje.rect.x 
             >= (ANCHURA_PANTALLA//2)+60 or self.personaje.rect.x <= (ANCHURA_PANTALLA//2) - 60)) :
                 
@@ -326,16 +360,6 @@ class Juego:
                         desplazamiento_derecha += 4
                 self.movimiento_constante += desplazamiento_derecha
                     
-                
-    def movimiento_sprites(self):
-        subida = 0
-        for monedas in self.monedas:
-                if (self.personaje.walking or self.personaje.running) and self.esta_enlamitad:   
-                    if self.personaje.direccion and monedas.rect.x >= ANCHURA_PANTALLA//2:
-                        subida -= 0.2
-                    else:
-                        subida +=0.2
-                monedas.rect.x += subida 
                 
  # --------------------------------------------------------------------------------   
     
@@ -562,7 +586,7 @@ class Juego:
                     self.colisiones_estrella()
                     self.detectar_cambio_cancion()
                     self.middle_wall()
-                    self.movimiento_sprites()
+                    self.manejar_scroll_sprites()
 
             # Renderizado del mensaje de pausa
             else:
