@@ -48,6 +48,11 @@ python app.pyw
 - **Nueva stats list:** Incluye imagenes de la cantidad de items
 - **Nuevo stat:** El personaje puede obtener puntos por cada accion beneficiosa
 - Scrolling (Por mejorar)
-- Pantalla de game over y perdida de vidas 
+- Pantalla de game over y perdida de vidas
+
+
+
+
 ![new background](https://github.com/user-attachments/assets/1e1fb351-2583-4fef-8abc-073f900b5ea9)
 
+  
