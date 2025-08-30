@@ -8,12 +8,6 @@ Este proyecto es un videojuego desarrollado con **Python** y **Pygame**, diseña
 
 ---
 
-## Integrantes 🫂
-
-- Bryan David Garces Quintero 
-- Jose Antonio Rodriguez.
-- Jermi Junior Varela Maldonado
-
 ---
 
 ## Descripción 📄
