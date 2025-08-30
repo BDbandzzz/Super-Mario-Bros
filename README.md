@@ -8,8 +8,6 @@ Este proyecto es un videojuego desarrollado con **Python** y **Pygame**, diseña
 
 ---
 
----
-
 ## Descripción 📄
 
 Este videojuego utiliza la librería `pygame` para gestionar gráficos, sonido y entradas del teclado. Estructurado en el paradigma **Programacion orientada a objetos** para manejar el jugador, enemigos, colisiones y  la lógica del juego.
